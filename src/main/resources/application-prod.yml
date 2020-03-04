@@ -1,0 +1,80 @@
+server:
+  port: ${PORT}
+  servlet:
+    context-path: /api/
+spring:
+  application:
+    name: tms-serve
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+          batch-size: 100
+          generate_statistics: true
+          batch_versioned_data: true
+        order_inserts: true
+        order_updates: true
+  ## quartz config
+  quartz:
+    job-store-type: jdbc
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: tms-quartz-app
+            instanceId: AUTO
+          threadPool:
+            threadCount: 20
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+            useProperties: false
+            misfireThreshold: 6000
+            tablePrefix: qrtz_
+            isClustered: false
+          plugin:
+            shutdownHook:
+              class: org.quartz.plugins.management.ShutdownHookPlugin
+              cleanShutdown: true
+  mvc:
+    throw-exception-if-no-handler-found: true
+logging:
+  config: "classpath:log4j2-spring.xml"
+email:
+  send:
+    from: ${ROOT_EMAIL}
+storage-service:
+  bucket-name: smartshoes
+  img-storage-name: img
+  files-storage-name: files
+  base-url: https://${storage-service.bucket-name}.s3-${cloud.aws.region.static}.amazonaws.com
+auth:
+  token:
+    admin:
+      access-expire: 480 #8h
+      refresh-expire: 4320 #3d
+    customer:
+      access-expire: 10080 #7d
+      refresh-expire: 43200 #30d
+cloud:
+  aws:
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY}
+      secretKey: ${AWS_SECRET_KEY}
+    region:
+      static: ${AWS_REGION}

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="60">
+    <Properties>
+        <Property name="log-path">/logs/jp/tms/</Property>
+        <Property name="LOG_PATTERN">
+            %d{yyyy-MM-dd HH:mm:ss.SSS}{UTC} %-5level [%-20X{X-Request-ID}] %logger{36} - Line %L - %M - %msg%n
+        </Property>
+    </Properties>
+    <Appenders>
+        <Console name="ConsoleAppender" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Console>
+        <!--  Rolling File Appender Debug  -->
+        <RollingFile name="FileAppenderDebug"
+                     fileName="${log-path}tms_app_debug.log"
+                     filePattern="${log-path}tms_app_debug-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout>
+                <Pattern>${LOG_PATTERN}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"/>
+                <SizeBasedTriggeringPolicy size="100MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="30"/>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <root level="info">
+            <AppenderRef ref="FileAppenderDebug" level="info"/>
+            <AppenderRef ref="ConsoleAppender" level="debug"/>
+        </root>
+        <logger name="org.hibernate.SQL" level="debug">
+            <AppenderRef ref="FileAppenderDebug" level="debug"/>
+        </logger>
+    </Loggers>
+</Configuration>
