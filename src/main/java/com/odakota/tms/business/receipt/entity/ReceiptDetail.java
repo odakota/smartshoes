@@ -28,6 +28,9 @@ public class ReceiptDetail extends BaseEntity {
     @Column(name = "amount")
     private Integer amount;
 
+    @Column(name = "product_code")
+    private String productCode;
+
     @Column(name = "detail")
     private String detail;
 

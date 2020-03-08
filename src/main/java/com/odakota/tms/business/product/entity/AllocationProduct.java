@@ -28,6 +28,9 @@ public class AllocationProduct extends BaseEntity {
     @Column(name = "size_id")
     private Long sizeId;
 
+    @Column(name = "branch_id")
+    private Long branchId;
+
     @Column(name = "total")
     private Integer total;
 }

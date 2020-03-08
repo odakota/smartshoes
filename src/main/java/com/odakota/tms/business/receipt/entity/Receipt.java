@@ -7,6 +7,7 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.Date;
 
 /**
  * @author haidv
@@ -22,8 +23,20 @@ public class Receipt extends BaseEntity {
     @Column(name = "code")
     private String code;
 
+    @Column(name = "bill_code")
+    private String billCode;
+
     @Column(name = "branch_id")
     private Long branchId;
+
+    @Column(name = "deliver")
+    private String deliver;
+
+    @Column(name = "receipt_date")
+    private Date receiptDate;
+
+    @Column(name = "warehouse")
+    private String warehouse;
 
     @Column(name = "file_path")
     private String filePath;

@@ -74,7 +74,7 @@ auth:
 cloud:
   aws:
     credentials:
-      accessKey: AKIAVIOOE7KF65EF5S72
-      secretKey: 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
+      accessKey: ${AWS_ACCESS_KEY}
+      secretKey: ${AWS_SECRET_KEY}
     region:
       static: ap-southeast-1

@@ -20,6 +20,9 @@ public class FieldConstant {
     public static final String USER_EMAIL = "email";
     public static final String USER_NAME = "username";
     public static final String USER_PHONE = "phone";
+    // RECEIPT FIELD NAME
+    public static final String RECEIPT_CODE = "code";
+    public static final String RECEIPT_BILL_NAME = "billCode";
     // ACCOUNT FIELD NAME
     public static final String ACCOUNT_USER_NAME = "userName";
     public static final String ACCOUNT_PASS = "password";

@@ -1,9 +1,27 @@
 --
+-- Insert data to table `color_tbl`
+--
+insert into color_tbl (name, code, updated_by, created_by, updated_date, created_date, deleted_flag)
+values ('Black', 'black', 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
+       ('Blue', 'blue', 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
+       ('Red', 'red', 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false);
+
+--
+-- Insert data to table `size_tbl`
+--
+insert into size_tbl (code, name, standard, updated_by, created_by, updated_date, created_date, deleted_flag)
+values ('37', '37', 1, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
+       ('38', '38', 1, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
+       ('39', '39', 1, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
+       ('40', '40', 1, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
+       ('41', '41', 1, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
+       ('42', '42', 1, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false);
+
+--
 -- Insert data to table `branch_tbl`
 --
 insert into branch_tbl (branch_name, branch_code, branch_phone, province_id, district_id, ward_id, street, updated_by,
-                        created_by,
-                        updated_date, created_date, deleted_flag)
+                        created_by, updated_date, created_date, deleted_flag)
 values ('CH Nguyễn Huệ', 'VN00001', '+842822007476', 1, 10, 129, '47 Đường Nguyễn Huệ', 1, 1, '2020-01-01 00:00:00',
         '2020-01-01 00:00:00', false),
        ('CH Nguyễn Trãi', 'VN00002', '+842839254368', 1, 10, 130, '98 Nguyễn Trãi', 1, 1, '2020-01-01 00:00:00',
@@ -80,7 +98,7 @@ values (1, 'Home', null, '/dashboard/analysis', 'dashboard/Analysis', null, null
         true, false, null, false, null, false, null, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
        (5, 'Sales', null, '/sales', 'layouts/RouteView', null, null, 0, null, null, 5.00, false, 'solution',
         true, false, null, false, null, false, null, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
-       (6, 'Campaigns', null, '/campaigns', 'layouts/RouteView', null, null, 0, null, null, 6.00, false, 'gift',
+       (6, 'Campaigns', null, '/campaigns', 'campaign/CampaignList', null, null, 0, null, null, 6.00, false, 'gift',
         true, false, null, false, null, false, null, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
        (7, 'Reports', null, '/reports', 'layouts/RouteView', null, null, 0, null, null, 7.00, false, 'file',
         true, false, null, false, null, false, null, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
@@ -240,6 +258,16 @@ where r.id = 1
 insert into user_role_tbl(role_id, user_id, updated_by, created_by, updated_date, created_date, deleted_flag)
 values (1, 1, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
        (2, 2, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false);
+
+--
+-- Insert data to table `category_tbl`
+--
+insert into category_tbl (name, updated_by, created_by, updated_date, created_date, deleted_flag)
+values ('Loafer', 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
+       ('Chelsea boot', 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
+       ('Slip on', 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
+       ('Athletic shoes', 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
+       ('Leather shoes', 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false);
 
 --
 -- Insert data to table province_tbl

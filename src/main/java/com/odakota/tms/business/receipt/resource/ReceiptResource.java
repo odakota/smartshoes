@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author haidv
@@ -27,7 +28,15 @@ public class ReceiptResource extends BaseResource<Receipt> {
 
     private String note;
 
-    private Date createdDate;
+    private String billCode;
+
+    private String deliver;
+
+    private Date receiptDate;
+
+    private String warehouse;
+
+    private List<ReceiptDetailResource> detail;
 
     /**
      * @author haidv
@@ -38,6 +47,8 @@ public class ReceiptResource extends BaseResource<Receipt> {
     @AllArgsConstructor
     public static class ReceiptCondition extends BaseCondition {
 
-        private Date createdDate;
+        private Date receiptDate;
+
+        private Long branchId;
     }
 }

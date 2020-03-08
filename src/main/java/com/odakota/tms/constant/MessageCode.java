@@ -62,6 +62,8 @@ public class MessageCode {
     public static final String MSG_BRAND_NOT_DELETED = "brand.not.deleted";
     public static final String MSG_BRAND_NOT_EXISTED = "brand.not.existed";
     public static final String MSG_BRAND_CODE_EXISTED = "brand.code.existed";
+    public static final String MSG_RECEIPT_CODE_EXISTED = "receipt.code.existed";
+    public static final String MSG_RECEIPT_BILL_CODE_EXISTED = "receipt.bill.code.existed";
 
     private MessageCode() {
     }

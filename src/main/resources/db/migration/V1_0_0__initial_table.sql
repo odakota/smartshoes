@@ -577,8 +577,12 @@ comment on column size_tbl.standard is 'assert type (0: ALL, 1: IMAGE, 2: MOVIE)
 --
 create table receipt_tbl (
     id           bigint primary key generated always as identity,
-    code         varchar(64) not null,
-    branch_id    bigint      not null,
+    code         varchar(64)  not null,
+    bill_code    varchar(64)  not null,
+    deliver      varchar(200) not null,
+    receipt_date date         not null,
+    warehouse    varchar(500) not null,
+    branch_id    bigint       not null,
     note         varchar(1024),
     file_path    text,
     updated_by   bigint,
@@ -594,9 +598,10 @@ create table receipt_tbl (
 --
 create table receipt_detail_tbl (
     id           bigint primary key generated always as identity,
-    product_id   bigint not null,
-    receipt_id   bigint not null,
-    amount       int    not null,
+    product_id   bigint      not null,
+    product_code varchar(16) not null,
+    receipt_id   bigint      not null,
+    amount       int         not null,
     detail       text,
     note         varchar(1024),
     updated_by   bigint,
