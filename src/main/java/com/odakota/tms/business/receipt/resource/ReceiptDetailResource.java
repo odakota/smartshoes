@@ -14,9 +14,15 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ReceiptDetailResource {
 
+    private Long id;
+
     private String amount;
 
     private String productCode;
 
     private String detail;
+
+    private Boolean isNew;
+
+    private Boolean editable;
 }

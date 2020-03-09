@@ -7,6 +7,7 @@ import com.odakota.tms.constant.ApiVersion;
 import com.odakota.tms.system.annotations.RequiredAuthentication;
 import com.odakota.tms.system.base.BaseController;
 import com.odakota.tms.system.base.BaseParameter;
+import com.odakota.tms.system.config.data.ResponseData;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -94,5 +95,32 @@ public class ReceiptController extends BaseController<Receipt, ReceiptResource> 
     @DeleteMapping(value = "/receipts/{id}", produces = ApiVersion.API_VERSION_1)
     public ResponseEntity<Void> deleteReceipt(@PathVariable Long id) {
         return super.deleteResource(id);
+    }
+
+    /**
+     * API approve receipt
+     *
+     * @param id receipt id
+     * @return {@link ResponseEntity}
+     */
+    @ApiOperation("API approve receipt")
+    @RequiredAuthentication//(value = ApiId.U_RECEIPT)
+    @PutMapping(value = "/receipts/{id}/approved", produces = ApiVersion.API_VERSION_1)
+    public ResponseEntity<Void> approveReceipt(@PathVariable Long id) {
+        receiptService.approveReceipt(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * API get receipt detail
+     *
+     * @param id receipt id
+     * @return {@link ResponseEntity}
+     */
+    @ApiOperation("API get receipt detail")
+    @RequiredAuthentication//(value = ApiId.R_RECEIPT)
+    @GetMapping(value = "/receipts/{id}/detail", produces = ApiVersion.API_VERSION_1)
+    public ResponseEntity<?> getReceiptDetail(@PathVariable Long id) {
+        return ResponseEntity.ok(new ResponseData<>().success(receiptService.getReceiptDetail(id)));
     }
 }

@@ -12,11 +12,12 @@ import com.odakota.tms.business.receipt.entity.Receipt;
 import com.odakota.tms.business.receipt.entity.ReceiptDetail;
 import com.odakota.tms.business.receipt.repository.ReceiptDetailRepository;
 import com.odakota.tms.business.receipt.repository.ReceiptRepository;
+import com.odakota.tms.business.receipt.resource.ReceiptDetailResource;
 import com.odakota.tms.business.receipt.resource.ReceiptResource;
 import com.odakota.tms.business.receipt.resource.ReceiptResource.ReceiptCondition;
 import com.odakota.tms.constant.FieldConstant;
 import com.odakota.tms.constant.MessageCode;
-import com.odakota.tms.system.base.BaseParameter;
+import com.odakota.tms.system.base.BaseParameter.FindCondition;
 import com.odakota.tms.system.base.BaseService;
 import com.odakota.tms.system.config.exception.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author haidv
@@ -79,6 +82,7 @@ public class ReceiptService extends BaseService<Receipt, ReceiptResource, Receip
             throw new CustomException(MessageCode.MSG_RECEIPT_BILL_CODE_EXISTED, HttpStatus.CONFLICT);
         }
         ReceiptResource receiptResource = super.createResource(resource);
+        // save receipt detail
         resource.getDetail().forEach(tmp -> {
             ReceiptDetail receiptDetail = new ReceiptDetail();
             Optional<Product> optionalProduct = productRepository.findByCodeAndDeletedFlagFalse(tmp.getProductCode());
@@ -89,13 +93,31 @@ public class ReceiptService extends BaseService<Receipt, ReceiptResource, Receip
                 receiptDetail.setDetail(tmp.getDetail());
                 receiptDetail.setReceiptId(receiptResource.getId());
                 receiptDetailRepository.save(receiptDetail);
+            }
+        });
+        return receiptResource;
+    }
+
+    /**
+     * Change status receipt
+     *
+     * @param id resource id
+     */
+    public void approveReceipt(Long id) {
+        Receipt receipt = receiptRepository.findByIdAndDeletedFlagFalse(id).orElseThrow(
+                () -> new CustomException(MessageCode.MSG_RECEIPT_NOT_EXISTED, HttpStatus.NOT_FOUND));
+        if (!receipt.getApprovedFlag()) {
+            List<ReceiptDetail> receiptDetails = receiptDetailRepository
+                    .findByDeletedFlagFalseAndReceiptId(receipt.getId());
+            receiptDetails.forEach(tmp -> {
                 // tmp.getDetail() = "red: 36-250,37-200,38-150; black: 36-250,37-200,38-150"
                 String[] groupColors = tmp.getDetail().split(";");
                 for (String groupColor : groupColors) {
                     String[] groupSizes = groupColor.trim().split(":");
                     // check match format and existed color code
                     if (groupSizes.length == 2) {
-                        Optional<Color> optColor = colorRepository.findByCodeAndDeletedFlagFalse(groupSizes[0].trim());
+                        Optional<Color> optColor = colorRepository
+                                .findByCodeAndDeletedFlagFalse(groupSizes[0].trim());
                         if (optColor.isPresent()) {
                             String[] sizes = groupSizes[1].trim().split(",");
                             for (String size : sizes) {
@@ -107,8 +129,8 @@ public class ReceiptService extends BaseService<Receipt, ReceiptResource, Receip
                                     if (optSize.isPresent()) {
                                         Optional<AllocationProduct> optAllocationProduct = allocationProductRepository
                                                 .findByDeletedFlagFalseAndProductIdAndColorIdAndSizeIdAndBranchId(
-                                                        receiptDetail.getProductId(), optColor.get().getId(),
-                                                        optSize.get().getId(), resource.getBranchId());
+                                                        tmp.getProductId(), optColor.get().getId(),
+                                                        optSize.get().getId(), receipt.getBranchId());
                                         if (optAllocationProduct.isPresent()) {
                                             // update total allocation product
                                             AllocationProduct allocationProduct = optAllocationProduct.get();
@@ -119,8 +141,8 @@ public class ReceiptService extends BaseService<Receipt, ReceiptResource, Receip
                                             AllocationProduct allocationProduct = new AllocationProduct();
                                             allocationProduct.setTotal(Integer.parseInt(var[1].trim()));
                                             allocationProduct.setColorId(optColor.get().getId());
-                                            allocationProduct.setBranchId(receiptResource.getBranchId());
-                                            allocationProduct.setProductId(receiptDetail.getProductId());
+                                            allocationProduct.setBranchId(receipt.getBranchId());
+                                            allocationProduct.setProductId(tmp.getProductId());
                                             allocationProduct.setSizeId(optSize.get().getId());
                                             allocationProductRepository.save(allocationProduct);
                                         }
@@ -130,9 +152,74 @@ public class ReceiptService extends BaseService<Receipt, ReceiptResource, Receip
                         }
                     }
                 }
+            });
+        }
+        receipt.setApprovedFlag(true);
+        receiptRepository.save(receipt);
+    }
+
+    /**
+     * Get receipt detail
+     *
+     * @param id Resource identifier
+     * @return The receipt detail.
+     */
+    public List<ReceiptDetailResource> getReceiptDetail(Long id) {
+        if (!receiptRepository.existsByIdAndDeletedFlagFalse(id)) {
+            throw new CustomException(MessageCode.MSG_RECEIPT_NOT_EXISTED, HttpStatus.NOT_FOUND);
+        }
+        List<ReceiptDetail> receiptDetails = receiptDetailRepository.findByDeletedFlagFalseAndReceiptId(id);
+        return receiptDetails.stream().map(tmp -> {
+            ReceiptDetailResource resource = mapper.convertToResource(tmp);
+            resource.setId(tmp.getId());
+            resource.setEditable(false);
+            resource.setIsNew(false);
+            return resource;
+        }).collect(Collectors.toList());
+    }
+
+    /**
+     * Update resources.
+     *
+     * @param id       Resource identifier
+     * @param resource resource
+     * @return The updated resource is returned.
+     */
+    @Transactional
+    @Override
+    protected ReceiptResource updateResource(Long id, ReceiptResource resource) {
+        Receipt receipt = receiptRepository.findByIdAndDeletedFlagFalse(id).orElseThrow(
+                () -> new CustomException(MessageCode.MSG_RECEIPT_NOT_EXISTED, HttpStatus.NOT_FOUND));
+        if (receipt.getApprovedFlag()) {
+            throw new CustomException(MessageCode.MSG_RECEIPT_NOT_UPDATED, HttpStatus.CONFLICT);
+        }
+        receiptRepository.save(this.convertToEntity(id, resource));
+        resource.getDetail().forEach(tmp -> {
+            Optional<Product> optionalProduct = productRepository.findByCodeAndDeletedFlagFalse(tmp.getProductCode());
+            if (optionalProduct.isPresent()) {
+                ReceiptDetail receiptDetail = mapper.convertToEntity(tmp);
+                receiptDetail.setReceiptId(id);
+                receiptDetail.setProductId(optionalProduct.get().getId());
+                receiptDetailRepository.save(receiptDetail);
             }
         });
-        return receiptResource;
+        return resource;
+    }
+
+    /**
+     * Specify a resource identifier and delete the resource.
+     *
+     * @param id Resource identifier
+     */
+    @Override
+    public void deleteResource(Long id) {
+        Receipt receipt = receiptRepository.findByIdAndDeletedFlagFalse(id).orElse(null);
+        if (receipt != null) {
+            if (receipt.getApprovedFlag()) {
+                throw new CustomException(MessageCode.MSG_RECEIPT_NOT_DELETED, HttpStatus.CONFLICT);
+            }
+            super.deleteResource(receipt);
+        }
     }
 
     /**
@@ -166,7 +253,8 @@ public class ReceiptService extends BaseService<Receipt, ReceiptResource, Receip
      * @return condition
      */
     @Override
-    protected ReceiptCondition getCondition(BaseParameter.FindCondition condition) {
-        return super.getCondition(condition);
+    protected ReceiptCondition getCondition(FindCondition condition) {
+        ReceiptCondition receiptCondition = condition.get(ReceiptCondition.class);
+        return receiptCondition == null ? new ReceiptCondition() : receiptCondition;
     }
 }

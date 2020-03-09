@@ -17,6 +17,8 @@ import com.odakota.tms.business.product.entity.Product;
 import com.odakota.tms.business.product.resource.CategoryResource;
 import com.odakota.tms.business.product.resource.ProductResource;
 import com.odakota.tms.business.receipt.entity.Receipt;
+import com.odakota.tms.business.receipt.entity.ReceiptDetail;
+import com.odakota.tms.business.receipt.resource.ReceiptDetailResource;
 import com.odakota.tms.business.receipt.resource.ReceiptResource;
 import com.odakota.tms.business.sales.entity.Campaign;
 import com.odakota.tms.business.sales.resource.CampaignResource;
@@ -208,6 +210,22 @@ public interface ModelMapper {
      * @return {@link Receipt}
      */
     Receipt convertToEntity(ReceiptResource resource);
+
+    /**
+     * Convert receipt detail resource to receipt detail entity
+     *
+     * @param entity {@link ReceiptDetail}
+     * @return {@link ReceiptDetailResource}
+     */
+    ReceiptDetailResource convertToResource(ReceiptDetail entity);
+
+    /**
+     * Convert receipt detail resource to receipt detail entity
+     *
+     * @param resource {@link ReceiptDetailResource}
+     * @return {@link ReceiptDetail}
+     */
+    ReceiptDetail convertToEntity(ReceiptDetailResource resource);
 
     @Named("getValueSex")
     default Integer getValueSex(Gender gender) {

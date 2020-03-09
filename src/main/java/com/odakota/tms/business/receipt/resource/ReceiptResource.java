@@ -36,6 +36,8 @@ public class ReceiptResource extends BaseResource<Receipt> {
 
     private String warehouse;
 
+    private Boolean approvedFlag = false;
+
     private List<ReceiptDetailResource> detail;
 
     /**
@@ -47,8 +49,12 @@ public class ReceiptResource extends BaseResource<Receipt> {
     @AllArgsConstructor
     public static class ReceiptCondition extends BaseCondition {
 
-        private Date receiptDate;
+        private Date startDate;
+
+        private Date endDate;
 
         private Long branchId;
+
+        private Boolean approvedFlag;
     }
 }

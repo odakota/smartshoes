@@ -576,20 +576,21 @@ comment on column size_tbl.standard is 'assert type (0: ALL, 1: IMAGE, 2: MOVIE)
 -- Table structure for table receipt_tbl
 --
 create table receipt_tbl (
-    id           bigint primary key generated always as identity,
-    code         varchar(64)  not null,
-    bill_code    varchar(64)  not null,
-    deliver      varchar(200) not null,
-    receipt_date date         not null,
-    warehouse    varchar(500) not null,
-    branch_id    bigint       not null,
-    note         varchar(1024),
-    file_path    text,
-    updated_by   bigint,
-    created_by   bigint,
-    updated_date timestamp,
-    created_date timestamp,
-    deleted_flag boolean default false,
+    id            bigint primary key generated always as identity,
+    code          varchar(64)  not null,
+    bill_code     varchar(64)  not null,
+    deliver       varchar(200) not null,
+    receipt_date  date         not null,
+    warehouse     varchar(500) not null,
+    branch_id     bigint       not null,
+    note          varchar(1024),
+    approved_flag boolean default false,
+    file_path     text,
+    updated_by    bigint,
+    created_by    bigint,
+    updated_date  timestamp,
+    created_date  timestamp,
+    deleted_flag  boolean default false,
     foreign key (branch_id) references branch_tbl (id)
 );
 

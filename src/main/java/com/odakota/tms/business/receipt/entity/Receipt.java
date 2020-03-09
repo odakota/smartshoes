@@ -43,4 +43,7 @@ public class Receipt extends BaseEntity {
 
     @Column(name = "note")
     private String note;
+
+    @Column(name = "approved_flag")
+    private Boolean approvedFlag;
 }
