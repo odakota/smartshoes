@@ -288,7 +288,7 @@ values (1, 'Home', null, '/dashboard/analysis', 'dashboard/Analysis', null, null
         null, false, null, false, true, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
        (52, 'Payment method', 5, '/sale/payment', 'sale/PaymentMethodList', null, null, 1, null, '1', 1.00, false, 'credit-card',
         true, false, false, false, null, false, null, false, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
-       (5200, 'Create payment', 52, null ., null, null, null, 2, 'payment:create', '1', 1.00, false, null, false,
+       (5200, 'Create payment', 52, null, null, null, null, 2, 'payment:create', '1', 1.00, false, null, false,
         true, null, false, null, false, true, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
        (5201, 'Update payment', 52, null, null, null, null, 2, 'payment:update', '1', 2.00, false, null, false, true,
         null, false, null, false, true, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
