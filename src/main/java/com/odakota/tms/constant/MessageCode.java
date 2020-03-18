@@ -64,6 +64,7 @@ public class MessageCode {
     public static final String MSG_RECEIPT_BILL_CODE_EXISTED = "receipt.bill.code.existed";
     public static final String MSG_RECEIPT_NOT_DELETED = "receipt.not.deleted";
     public static final String MSG_RECEIPT_NOT_UPDATED = "receipt.not.updated";
+    public static final String MSG_ORDER_NOT_EXISTED = "order.not.existed";
 
     private MessageCode() {
     }

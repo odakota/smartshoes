@@ -13,21 +13,27 @@ import com.odakota.tms.business.customer.resource.CustomerResource;
 import com.odakota.tms.business.notification.entity.Notification;
 import com.odakota.tms.business.notification.resource.NotificationResource;
 import com.odakota.tms.business.product.entity.Category;
+import com.odakota.tms.business.product.entity.Color;
 import com.odakota.tms.business.product.entity.Product;
 import com.odakota.tms.business.product.resource.CategoryResource;
+import com.odakota.tms.business.product.resource.ColorResource;
 import com.odakota.tms.business.product.resource.ProductResource;
 import com.odakota.tms.business.receipt.entity.Receipt;
 import com.odakota.tms.business.receipt.entity.ReceiptDetail;
 import com.odakota.tms.business.receipt.resource.ReceiptDetailResource;
 import com.odakota.tms.business.receipt.resource.ReceiptResource;
 import com.odakota.tms.business.sales.entity.Campaign;
+import com.odakota.tms.business.sales.entity.SalesOrder;
 import com.odakota.tms.business.sales.resource.CampaignResource;
+import com.odakota.tms.business.sales.resource.SalesOrderResource;
 import com.odakota.tms.enums.auth.Gender;
 import com.odakota.tms.enums.customer.CustomerType;
+import com.odakota.tms.enums.customer.Segment;
 import com.odakota.tms.enums.notify.MsgType;
 import com.odakota.tms.enums.notify.Priority;
 import com.odakota.tms.enums.notify.SendStatus;
 import com.odakota.tms.enums.sale.DiscountType;
+import com.odakota.tms.enums.sale.OrderStatus;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -108,7 +114,8 @@ public interface ModelMapper {
      * @return {@link CustomerResource}
      */
     @Mappings({@Mapping(source = "sex", target = "sex", qualifiedByName = "getValueSex"),
-               @Mapping(source = "customerType", target = "customerType", qualifiedByName = "getValueCustomerType")})
+               @Mapping(source = "customerType", target = "customerType", qualifiedByName = "getValueCustomerType"),
+               @Mapping(source = "customerSegment", target = "customerSegment", qualifiedByName = "getValueSegment")})
     CustomerResource convertToResource(Customer entity);
 
     /**
@@ -118,7 +125,8 @@ public interface ModelMapper {
      * @return {@link Customer}
      */
     @Mappings({@Mapping(source = "sex", target = "sex", qualifiedByName = "getSexByValue"),
-               @Mapping(source = "customerType", target = "customerType", qualifiedByName = "getCustomerTypeByValue")})
+               @Mapping(source = "customerType", target = "customerType", qualifiedByName = "getCustomerTypeByValue"),
+               @Mapping(source = "customerSegment", target = "customerSegment", qualifiedByName = "getSegmentByValue")})
     Customer convertToEntity(CustomerResource resource);
 
     /**
@@ -227,6 +235,32 @@ public interface ModelMapper {
      */
     ReceiptDetail convertToEntity(ReceiptDetailResource resource);
 
+    /**
+     * Convert order resource to order entity
+     *
+     * @param entity {@link SalesOrder}
+     * @return {@link SalesOrderResource}
+     */
+    @Mapping(source = "status", target = "status", qualifiedByName = "getValueOrderStatus")
+    SalesOrderResource convertToResource(SalesOrder entity);
+
+    /**
+     * Convert order entity to order resource
+     *
+     * @param resource {@link SalesOrderResource}
+     * @return {@link SalesOrder}
+     */
+    @Mapping(source = "status", target = "status", qualifiedByName = "getOrderStatusByValue")
+    SalesOrder convertToEntity(SalesOrderResource resource);
+
+    /**
+     * Convert color resource to color entity
+     *
+     * @param entity {@link Color}
+     * @return {@link ColorResource}
+     */
+    ColorResource convertToResource(Color entity);
+
     @Named("getValueSex")
     default Integer getValueSex(Gender gender) {
         return gender == null ? null : gender.getValue();
@@ -295,5 +329,25 @@ public interface ModelMapper {
     @Named("getDiscountTypeByValue")
     default DiscountType getDiscountTypeByValue(Integer value) {
         return DiscountType.of(value);
+    }
+
+    @Named("getValueOrderStatus")
+    default Integer getValueOrderStatus(OrderStatus orderStatus) {
+        return orderStatus == null ? null : orderStatus.getValue();
+    }
+
+    @Named("getOrderStatusByValue")
+    default OrderStatus getOrderStatusByValue(Integer value) {
+        return OrderStatus.of(value);
+    }
+
+    @Named("getValueSegment")
+    default Integer getValueSegment(Segment orderStatus) {
+        return orderStatus == null ? null : orderStatus.getValue();
+    }
+
+    @Named("getSegmentByValue")
+    default Segment getSegmentByValue(Integer value) {
+        return Segment.of(value);
     }
 }

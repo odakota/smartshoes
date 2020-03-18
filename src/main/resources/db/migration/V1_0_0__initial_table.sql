@@ -439,29 +439,32 @@ create table customer_tbl (
     id                       bigint primary key generated always as identity,
     customer_type            smallint     not null,
     full_name                varchar(256) not null,
-    sex                      smallint,
+    sex                      smallint default 0,
     birth_date               date,
     avatar                   varchar(500),
     email                    varchar(45),
     phone                    varchar(45),
-    postal_code              varchar(45),
+    identifier               varchar(45),
     province_id              bigint,
     district_id              bigint,
     ward_id                  bigint,
     street                   varchar(500),
-    customer_segment         varchar(20),
-    is_mail_magazine_receipt boolean,
-    disable_flag             boolean,
+    customer_segment         smallint default 1,
+    is_mail_magazine_receipt boolean  default false,
+    disable_flag             boolean  default false,
     input_type               smallint     not null,
     updated_by               bigint,
     created_by               bigint,
     updated_date             timestamp,
     created_date             timestamp,
-    deleted_flag             boolean default false
+    deleted_flag             boolean  default false
 );
+comment on column customer_tbl.birth_date is 'This is the date of birth for individual customers and the date of establishment with business customers';
 comment on column customer_tbl.sex is 'Gender: 0-Other, 1-Male, 2-Female';
 comment on column customer_tbl.customer_type is 'Customer type: 1-Individual customers, 2-Corporate customers';
 comment on column customer_tbl.input_type is 'Input type: 1-Online, 2-Offline';
+comment on column customer_tbl.customer_segment is '1-Super small, 2-Small, 3-Medium, 4-Big';
+comment on column customer_tbl.identifier is 'This is the identity card for individual customers and the tax code with business customers';
 
 --
 -- Table structure for table category_tbl
@@ -513,12 +516,13 @@ comment on column size_tbl.standard is 'standard (1: VN, 2: US, 3: UK)';
 --
 create table product_tbl (
     id                  bigint primary key generated always as identity,
-    branch_id           bigint       not null,
+    branch_id           bigint,
     category_id         bigint       not null,
     name                varchar(128) not null,
     code                varchar(16)  not null,
     price               numeric      not null,
     company_sales_price numeric      not null,
+    path                varchar(500) not null,
     sale_start_at       timestamp,
     sale_end_at         timestamp,
     description         text,
@@ -553,24 +557,6 @@ create table allocation_product_tbl (
     foreign key (size_id) references size_tbl (id),
     foreign key (branch_id) references branch_tbl (id)
 );
-
---
--- Table structure for table product_assert_tbl
---
-create table product_assert_tbl (
-    id           bigint primary key generated always as identity,
-    product_id   bigint       not null,
-    type         smallint     not null,
-    path         varchar(500) not null,
-    sort_order   smallint,
-    updated_by   bigint,
-    created_by   bigint,
-    updated_date timestamp,
-    created_date timestamp,
-    deleted_flag boolean default false,
-    foreign key (product_id) references product_tbl (id)
-);
-comment on column size_tbl.standard is 'assert type (0: ALL, 1: IMAGE, 2: MOVIE)';
 
 --
 -- Table structure for table receipt_tbl
@@ -620,7 +606,6 @@ create table receipt_detail_tbl (
 create table payment_tbl (
     id           bigint primary key generated always as identity,
     name         varchar(1024),
-    payment_type int                       not null,
     fee          int     default 0         not null,
     lower_limit  bigint  default 1         not null,
     upper_limit  bigint  default 999999999 not null,
@@ -690,6 +675,7 @@ create table sales_order_tbl (
     payment_id   bigint   not null,
     sale_type    smallint not null,
     order_type   smallint not null,
+    status       smallint not null,
     tax          numeric  not null,
     total_amount numeric  not null,
     updated_by   bigint,
@@ -700,6 +686,7 @@ create table sales_order_tbl (
     foreign key (customer_id) references customer_tbl (id),
     foreign key (payment_id) references payment_tbl (id)
 );
+comment on column sales_order_tbl.status is 'Order status: 1-Unpaid; 2-Paid; 3-Cancel';
 
 --
 -- Table structure for table sales_order_detail_tbl

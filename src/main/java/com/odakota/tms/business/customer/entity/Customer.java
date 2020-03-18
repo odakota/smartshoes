@@ -3,9 +3,11 @@ package com.odakota.tms.business.customer.entity;
 import com.odakota.tms.enums.auth.Gender;
 import com.odakota.tms.enums.customer.CustomerType;
 import com.odakota.tms.enums.customer.InputType;
+import com.odakota.tms.enums.customer.Segment;
 import com.odakota.tms.mapper.convert.CustomerTypeConverter;
 import com.odakota.tms.mapper.convert.GenderConverter;
 import com.odakota.tms.mapper.convert.InputTypeConverter;
+import com.odakota.tms.mapper.convert.SegmentConverter;
 import com.odakota.tms.system.base.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
@@ -50,8 +52,8 @@ public class Customer extends BaseEntity {
     @Column(name = "phone")
     private String phone;
 
-    @Column(name = "postal_code")
-    private String postalCode;
+    @Column(name = "identifier")
+    private String identifier;
 
     @Column(name = "province_id")
     private Long provinceId;
@@ -66,7 +68,8 @@ public class Customer extends BaseEntity {
     private String street;
 
     @Column(name = "customer_segment")
-    private String customerSegment;
+    @Convert(converter = SegmentConverter.class)
+    private Segment customerSegment;
 
     @Column(name = "is_mail_magazine_receipt")
     private boolean isMailMagazineReceipt;

@@ -36,7 +36,7 @@ public class CustomerResource extends BaseResource<Customer> {
 
     private String phone;
 
-    private String postalCode;
+    private String identifier;
 
     private Long provinceId;
 
@@ -46,7 +46,7 @@ public class CustomerResource extends BaseResource<Customer> {
 
     private String street;
 
-    private String customerSegment;
+    private Integer customerSegment;
 
     private boolean isMailMagazineReceipt;
 

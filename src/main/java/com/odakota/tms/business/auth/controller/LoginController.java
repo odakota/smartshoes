@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
  * @author haidv
  * @version 1.0
  */
+@CrossOrigin(origins = "https://tms-front.herokuapp.com/")
 @RestController
 public class LoginController {
 

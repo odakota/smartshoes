@@ -67,6 +67,27 @@ values ('Admin System', 'root',
        ('Admin branch', 'branch.admin', 'This is the highest role of the branch.', null, 1, 1, '2020-01-01 00:00:00',
         '2020-01-01 00:00:00', false);
 
+--
+-- Insert data to table `category_tbl`
+--
+insert into category_tbl (name, updated_by, created_by, updated_date, created_date, deleted_flag)
+values ('Loafers & Slip-Ons', 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
+       ('Leather', 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
+       ('Oxfords', 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false);
+
+--
+-- Insert data to table `product_tbl`
+--
+insert into product_tbl (branch_id, category_id, name, code, price, company_sales_price, sale_start_at, sale_end_at,
+                         description, is_company_sales, updated_by, created_by, updated_date, created_date,
+                         deleted_flag, path)
+values (null, 1, 'Men''s loafers MK985', 'P0001', 1200, 1150, '2020-01-01 00:00:00', null, null, false, 1, 1,
+        '2020-01-01 00:00:00', '2020-01-01 00:00:00', false, 'img/product/prod-default.jpg'),
+       (null, 1, 'Men''s loafers MK983', 'P0002', 1200, 1150, '2020-01-01 00:00:00', null, null, false, 1, 1,
+        '2020-01-01 00:00:00', '2020-01-01 00:00:00', false, 'img/product/prod-default.jpg'),
+       (null, 1, 'Men''s loafers MK984', 'P0003', 1200, 1150, '2020-01-01 00:00:00', null, null, false, 1, 1,
+        '2020-01-01 00:00:00', '2020-01-01 00:00:00', false, 'img/product/prod-default.jpg');
+
 
 --
 -- Insert data to table `user_tbl`
@@ -75,11 +96,55 @@ insert into user_tbl(user_name, password, full_name, sex, birth_date, avatar, em
                      district_id, ward_id, street, lock_flag, branch_id, updated_by, created_by, updated_date,
                      created_date, deleted_flag)
 values ('root', '$2a$10$DVdKtQPt6gByXrXZNtMU8.7g5LL.TpLXno72T7NY03zzLt6382iLG', 'Đoàn Hải', 1, '1995-01-02',
-        '/avatar/default.jpg', 'doanhai8080@gmail.com', '+84982445665', 2, 35, 535,
+        'img/avatar/emp-default.jpg', 'doanhai8080@gmail.com', '+84982445665', 2, 35, 535,
         '201 Giải Phóng', false, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
        ('namdq', '$2a$10$DVdKtQPt6gByXrXZNtMU8.7g5LL.TpLXno72T7NY03zzLt6382iLG', 'Đỗ Nam', 1, '1995-01-02',
-        '/avatar/default.jpg', 'namdq@gmail.com', '+84934576890', 2, 35, 535,
+        'img/avatar/emp-default.jpg', 'namdq@gmail.com', '+84934576890', 2, 35, 535,
         '201 Giải Phóng', false, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false);
+
+--
+-- Insert data to table `customer_tbl`
+--
+insert into customer_tbl(customer_type, full_name, sex, birth_date, avatar, email, phone, identifier, province_id,
+                         district_id, ward_id, street, customer_segment, input_type, updated_by, created_by,
+                         updated_date, created_date)
+values (1, 'Anonymous', 0, '1900-01-01', 'img/avatar/cus-default.jpg', 'anonymous@gmail.com', '+84000000000',
+        '000000000', 2,
+        35, 535, '201 Giải Phóng', 1, 2, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00'),
+       (1, 'Lê Quân', 1, '1995-10-10', 'img/avatar/cus-default.jpg', 'quanle@gmail.com', '+84982445665', '174711247', 2,
+        35, 535, '201 Giải Phóng', 1, 2, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00'),
+       (1, 'Hoàng Nam', 1, '1997-10-10', 'img/avatar/cus-default.jpg', 'namhoang@gmail.com', '+84984583614',
+        '174722358', 2, 35, 535, '201 Giải Phóng', 1, 2, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00');
+
+--
+-- Insert data to table `receipt_tbl`
+--
+insert into receipt_tbl (code, bill_code, deliver, receipt_date, warehouse, branch_id, note, approved_flag,
+                         file_path, updated_by, created_by, updated_date, created_date, deleted_flag)
+values ('R00001', 'B00001', 'Lê Nam', '2020-03-17', 'Kho số 3', 1, null, false, null, 2, 2,
+        '2020-01-01 00:00:00', '2020-01-01 00:00:00', false);
+
+--
+-- Insert data to table `receipt_detail_tbl`
+--
+insert into receipt_detail_tbl (product_id, product_code, receipt_id, amount, detail, note, updated_by,
+                                created_by, updated_date, created_date, deleted_flag)
+values (1, 'P0001', 1, 300,
+        'red:37-20,38-15,39-15,40-30,41-20;black:37-20,38-15,39-15,40-30,41-20;blue:37-20,38-15,39-15,40-30,41-20',
+        null, 2, 2, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
+       (2, 'P0002', 1, 240,
+        'red:37-20,38-15,39-15,40-30,41-20,41-10,42-10;black:37-20,38-15,39-15,40-30,41-20,41-10,42-10', null, 2, 2,
+        '2020-01-01 00:00:00', '2020-03-17 16:24:27.808788', false),
+       (3, 'P0003', 1, 150,
+        'red:37-30,38-25,39-25,40-30,41-20,41-10,42-10;blue:37-30,38-25,39-25,40-30,41-20,41-10,42-10', null, 2, 2,
+        '2020-01-01 00:00:00', '2020-01-01 00:00:00', false);
+
+--
+-- Insert data to table `payment_tbl`
+--
+insert into payment_tbl (name, fee, lower_limit, upper_limit, updated_by, created_by, updated_date,
+                         created_date, deleted_flag)
+values ('Cash', 0, 0, 9999999, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false);
 
 --
 -- Insert data to table `permission_tbl`
@@ -211,7 +276,7 @@ values (1, 'Home', null, '/dashboard/analysis', 'dashboard/Analysis', null, null
         null, false, null, false, true, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
        (4403, 'Read items', 44, null, null, null, null, 2, 'items:read', '1', 4.00, false, null, false, true,
         null, false, null, false, true, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
-       (51, 'Tax', 5, '/sale/tax', 'sale/TaxList', null, null, 1, null, '1', 1.00, false, 'flag', true, false, false,
+       (51, 'Sale', 5, '/sale', 'sale/Sale', null, null, 1, null, '1', 1.00, false, 'shopping', true, false, false,
         false, null, false, null, false, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
        (5100, 'Create tax', 51, null, null, null, null, 2, 'tax:create', '1', 1.00, false, null, false,
         true, null, false, null, false, true, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
@@ -221,9 +286,9 @@ values (1, 'Home', null, '/dashboard/analysis', 'dashboard/Analysis', null, null
         null, false, null, false, true, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
        (5103, 'Read tax', 51, null, null, null, null, 2, 'tax:read', '1', 4.00, false, null, false, true,
         null, false, null, false, true, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
-       (52, 'Payment', 5, '/sale/payment', 'sale/PaymentList', null, null, 1, null, '1', 1.00, false, 'credit-card',
+       (52, 'Payment method', 5, '/sale/payment', 'sale/PaymentMethodList', null, null, 1, null, '1', 1.00, false, 'credit-card',
         true, false, false, false, null, false, null, false, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
-       (5200, 'Create payment', 52, null, null, null, null, 2, 'payment:create', '1', 1.00, false, null, false,
+       (5200, 'Create payment', 52, null ., null, null, null, 2, 'payment:create', '1', 1.00, false, null, false,
         true, null, false, null, false, true, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
        (5201, 'Update payment', 52, null, null, null, null, 2, 'payment:update', '1', 2.00, false, null, false, true,
         null, false, null, false, true, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
@@ -231,8 +296,8 @@ values (1, 'Home', null, '/dashboard/analysis', 'dashboard/Analysis', null, null
         null, false, null, false, true, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
        (5203, 'Read payment', 52, null, null, null, null, 2, 'payment:read', '1', 4.00, false, null, false, true,
         null, false, null, false, true, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
-       (53, 'Sales', 5, '/sale/#/', 'sale/Sale', null, null, 1, null, '1', 1.00, false, 'shopping', true, false, false,
-        false, null, false, null, false, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false);
+       (53, 'Order', 5, '/sale/order', 'sale/Order', null, null, 1, null, '1', 1.00, false, 'file-text', true, false,
+        false, false, null, false, null, false, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false);
 
 --
 -- Insert data to table `permission_role_tbl`
@@ -258,16 +323,6 @@ where r.id = 1
 insert into user_role_tbl(role_id, user_id, updated_by, created_by, updated_date, created_date, deleted_flag)
 values (1, 1, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
        (2, 2, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false);
-
---
--- Insert data to table `category_tbl`
---
-insert into category_tbl (name, updated_by, created_by, updated_date, created_date, deleted_flag)
-values ('Loafer', 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
-       ('Chelsea boot', 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
-       ('Slip on', 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
-       ('Athletic shoes', 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
-       ('Leather shoes', 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false);
 
 --
 -- Insert data to table province_tbl

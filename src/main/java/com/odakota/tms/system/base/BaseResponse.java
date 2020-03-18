@@ -23,6 +23,11 @@ public class BaseResponse<R extends BaseResource<?>> {
         this.data = data;
     }
 
+    public BaseResponse(Pagination pagination, List<R> data) {
+        this.pagination = pagination;
+        this.data = data;
+    }
+
     public BaseResponse(Page<R> page) {
         this.data = page.getContent();
         this.pagination = new Pagination(page.getTotalPages(), page.getNumber() + 1, page.getSize(),

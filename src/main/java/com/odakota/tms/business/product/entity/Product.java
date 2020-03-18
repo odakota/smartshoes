@@ -49,4 +49,7 @@ public class Product extends BaseEntity {
 
     @Column(name = "is_company_sales")
     private boolean isCompanySales;
+
+    @Column(name = "path")
+    private String path;
 }

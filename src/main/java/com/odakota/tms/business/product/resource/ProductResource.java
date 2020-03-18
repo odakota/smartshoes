@@ -39,6 +39,8 @@ public class ProductResource extends BaseResource<Product> {
 
     private boolean isCompanySales;
 
+    private String path;
+
     /**
      * @author haidv
      * @version 1.0

@@ -81,7 +81,7 @@ public class UserService extends BaseService<User, UserResource, UserCondition> 
         resource.setPassword(passwordEncoder.encode(resource.getConfirmPassword()));
         // set default avatar
         if (resource.getAvatar() == null) {
-            resource.setAvatar(Constant.IMAGE_PATH_DEFAULT);
+            resource.setAvatar(Constant.EMP_IMAGE_PATH_DEFAULT);
         }
         // save user
         User entity = this.convertToEntity(resource.getId(), resource);
@@ -147,14 +147,16 @@ public class UserService extends BaseService<User, UserResource, UserCondition> 
             userRole.setRoleId(tmp);
             userRoleRepository.save(userRole);
         });
+        if (resource.isLockFlag() || (preUser.getBranchId() == null && resource.getBranchId() != null) ||
+            (preUser.getBranchId() != null && resource.getBranchId() == null) ||
+            (preUser.getBranchId() != null && !preUser.getBranchId().equals(resource.getBranchId()))) {
+            // delete all token of user
+            accessTokenRepository.deleteAccessTokenByUserId(id);
+        }
         User entity = convertToEntity(id, resource);
         entity.setPassword(preUser.getPassword());
         userRepository.save(entity);
         resource.setId(id);
-        if (resource.isLockFlag()) {
-            // delete all token of user
-            accessTokenRepository.deleteAccessTokenByUserId(id);
-        }
         return resource;
     }
 

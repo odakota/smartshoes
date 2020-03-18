@@ -7,6 +7,7 @@ import com.odakota.tms.constant.ApiVersion;
 import com.odakota.tms.system.annotations.RequiredAuthentication;
 import com.odakota.tms.system.base.BaseController;
 import com.odakota.tms.system.base.BaseParameter;
+import com.odakota.tms.system.config.data.ResponseData;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -94,5 +95,31 @@ public class ProductController extends BaseController<Product, ProductResource> 
     @DeleteMapping(value = "/products/{id}", produces = ApiVersion.API_VERSION_1)
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         return super.deleteResource(id);
+    }
+
+    /**
+     * API get product color
+     *
+     * @param id product id
+     * @return {@link ResponseEntity}
+     */
+    @ApiOperation("API get product color")
+    @RequiredAuthentication//(value = ApiId.R_PRODUCT)
+    @GetMapping(value = "/products/{id}/color", produces = ApiVersion.API_VERSION_1)
+    public ResponseEntity<?> getProductColor(@PathVariable Long id) {
+        return ResponseEntity.ok(new ResponseData<>().success(productService.getProductColor(id)));
+    }
+
+    /**
+     * API get product size
+     *
+     * @param id product id
+     * @return {@link ResponseEntity}
+     */
+    @ApiOperation("API get product size")
+    @RequiredAuthentication//(value = ApiId.R_PRODUCT)
+    @GetMapping(value = "/products/{id}/color/{colorId}", produces = ApiVersion.API_VERSION_1)
+    public ResponseEntity<?> getProductSize(@PathVariable Long id, @PathVariable Long colorId) {
+        return ResponseEntity.ok(new ResponseData<>().success(productService.getProductSize(id, colorId)));
     }
 }
