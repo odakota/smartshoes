@@ -4,9 +4,7 @@ import com.odakota.tms.system.base.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -39,13 +37,15 @@ public class Product extends BaseEntity {
     private Long companySalesPrice;
 
     @Column(name = "sale_start_at")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date saleStartAt;
 
     @Column(name = "sale_end_at")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date saleEndAt;
 
     @Column(name = "description")
-    private Date description;
+    private String description;
 
     @Column(name = "is_company_sales")
     private boolean isCompanySales;

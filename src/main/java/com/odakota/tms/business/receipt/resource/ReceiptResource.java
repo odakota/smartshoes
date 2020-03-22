@@ -1,6 +1,8 @@
 package com.odakota.tms.business.receipt.resource;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.odakota.tms.business.receipt.entity.Receipt;
+import com.odakota.tms.constant.Constant;
 import com.odakota.tms.system.base.BaseCondition;
 import com.odakota.tms.system.base.BaseResource;
 import lombok.AllArgsConstructor;
@@ -32,6 +34,7 @@ public class ReceiptResource extends BaseResource<Receipt> {
 
     private String deliver;
 
+    @JsonFormat(pattern = Constant.YYYY_MM_DD)
     private Date receiptDate;
 
     private String warehouse;

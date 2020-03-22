@@ -1,18 +1,25 @@
 package com.odakota.tms.business.notification.service;
 
 import com.odakota.tms.business.notification.entity.Notification;
+import com.odakota.tms.business.notification.entity.NotificationUser;
 import com.odakota.tms.business.notification.repository.NotificationRepository;
+import com.odakota.tms.business.notification.repository.NotificationUserRepository;
 import com.odakota.tms.business.notification.resource.NotificationResource;
 import com.odakota.tms.business.notification.resource.NotificationResource.NotificationCondition;
+import com.odakota.tms.constant.MessageCode;
 import com.odakota.tms.enums.notify.MsgType;
 import com.odakota.tms.system.base.BaseParameter;
 import com.odakota.tms.system.base.BaseResponse;
 import com.odakota.tms.system.base.BaseService;
+import com.odakota.tms.system.config.UserSession;
+import com.odakota.tms.system.config.exception.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,10 +32,18 @@ public class NotificationService extends BaseService<Notification, NotificationR
 
     private final NotificationRepository notificationRepository;
 
+    private final NotificationUserRepository notificationUserRepository;
+
+    private final UserSession userSession;
+
     @Autowired
-    public NotificationService(NotificationRepository notificationRepository) {
+    public NotificationService(NotificationRepository notificationRepository,
+                               NotificationUserRepository notificationUserRepository,
+                               UserSession userSession) {
         super(notificationRepository);
         this.notificationRepository = notificationRepository;
+        this.notificationUserRepository = notificationUserRepository;
+        this.userSession = userSession;
     }
 
     /**
@@ -50,6 +65,20 @@ public class NotificationService extends BaseService<Notification, NotificationR
         Page<Notification> msg = notificationRepository.findByCondition(condition, pageRequest);
         map.put("msg", new BaseResponse<>(this.getResources(msg.getContent()), msg));
         return map;
+    }
+
+    /**
+     * Update status read notification of user
+     *
+     * @param id notification id
+     */
+    public void readNotification(Long id) {
+        NotificationUser notificationUser = notificationUserRepository
+                .findByDeletedFlagFalseAndNotificationIdAndUserId(id, userSession.getUserId())
+                .orElseThrow(() -> new CustomException(MessageCode.MSG_NOTIFY_NOT_EXISTED, HttpStatus.NOT_FOUND));
+        notificationUser.setRead(true);
+        notificationUser.setReadTime(new Date());
+        notificationUserRepository.save(notificationUser);
     }
 
     /**

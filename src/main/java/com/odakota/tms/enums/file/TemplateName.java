@@ -10,7 +10,8 @@ public enum TemplateName {
 
     TEMPLATE_CREATE_ACCOUNT("create-account.html"),
     TEMPLATE_RESET_PASS("reset-pass.html"),
-    TEMPLATE_CONFIRM("confirm.html");
+    TEMPLATE_CONFIRM("confirm.html"),
+    TEMPLATE_JOB_ERROR("job-error.html");
 
     @Getter
     private String value;

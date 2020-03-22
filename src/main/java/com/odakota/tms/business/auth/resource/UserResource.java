@@ -10,7 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.List;
@@ -35,7 +34,6 @@ public class UserResource extends BaseResource<User> {
 
     private int sex;
 
-    @DateTimeFormat(pattern = Constant.YYYY_MM_DD)
     @JsonFormat(pattern = Constant.YYYY_MM_DD)
     private Date birthDay;
 

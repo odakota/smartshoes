@@ -7,12 +7,22 @@ import com.odakota.tms.business.auth.repository.UserRepository;
 import com.odakota.tms.business.auth.repository.UserRoleRepository;
 import com.odakota.tms.business.auth.resource.UserResource;
 import com.odakota.tms.business.auth.resource.UserResource.UserCondition;
+import com.odakota.tms.business.notification.entity.Notification;
+import com.odakota.tms.business.notification.entity.NotificationUser;
+import com.odakota.tms.business.notification.repository.NotificationRepository;
+import com.odakota.tms.business.notification.repository.NotificationUserRepository;
 import com.odakota.tms.constant.Constant;
 import com.odakota.tms.constant.FieldConstant;
 import com.odakota.tms.constant.MessageCode;
+import com.odakota.tms.constant.NotificationConstant;
+import com.odakota.tms.enums.notify.MsgType;
+import com.odakota.tms.enums.notify.Priority;
+import com.odakota.tms.enums.notify.SendStatus;
 import com.odakota.tms.system.base.BaseParameter.FindCondition;
 import com.odakota.tms.system.base.BaseService;
 import com.odakota.tms.system.config.exception.CustomException;
+import com.odakota.tms.system.service.websocket.WebSocket;
+import com.odakota.tms.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,6 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,16 +49,28 @@ public class UserService extends BaseService<User, UserResource, UserCondition> 
 
     private final UserRoleRepository userRoleRepository;
 
+    private final NotificationRepository notificationRepository;
+
+    private final NotificationUserRepository notificationUserRepository;
+
+    private final WebSocket webSocket;
+
     @Autowired
     public UserService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder,
                        AccessTokenRepository accessTokenRepository,
-                       UserRoleRepository userRoleRepository) {
+                       UserRoleRepository userRoleRepository,
+                       NotificationRepository notificationRepository,
+                       NotificationUserRepository notificationUserRepository,
+                       WebSocket webSocket) {
         super(userRepository);
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.accessTokenRepository = accessTokenRepository;
         this.userRoleRepository = userRoleRepository;
+        this.notificationRepository = notificationRepository;
+        this.notificationUserRepository = notificationUserRepository;
+        this.webSocket = webSocket;
     }
 
     public User getUser(String username) {
@@ -97,7 +120,7 @@ public class UserService extends BaseService<User, UserResource, UserCondition> 
         // set role default to user
         UserRole userRole = new UserRole();
         userRole.setUserId(entity.getId());
-        userRole.setRoleId((long) Constant.ROLE_ID_DEFAULT);
+        userRole.setRoleId(Constant.ROLE_ID_DEFAULT);
         userRoleRepository.save(userRole);
         return resource;
     }
@@ -147,7 +170,26 @@ public class UserService extends BaseService<User, UserResource, UserCondition> 
             userRole.setRoleId(tmp);
             userRoleRepository.save(userRole);
         });
-        if (resource.isLockFlag() || (preUser.getBranchId() == null && resource.getBranchId() != null) ||
+        // if change role then send notification to user
+        if (!addIds.isEmpty() || !deleteIds.isEmpty()) {
+            Notification notification = new Notification();
+            notification.setPriority(Priority.HIGH);
+            notification.setType(MsgType.SYSTEM);
+            notification.setTitle(NotificationConstant.TITLE_CHANGE_INFO);
+            notification.setContent(NotificationConstant.CONTENT_CHANGE_INFO);
+            notification.setSendStatus(SendStatus.PUBLISHED);
+            notification.setStartDate(new Date());
+            notification.setSendTime(new Date());
+            notification = notificationRepository.save(notification);
+            NotificationUser notificationUser = new NotificationUser();
+            notificationUser.setNotificationId(notification.getId());
+            notificationUser.setRead(false);
+            notificationUser.setUserId(id);
+            notificationUserRepository.save(notificationUser);
+            webSocket.sendOneMessage(id, Utils.toJson(mapper.convertToResource(notification)));
+        }
+        if (!addIds.isEmpty() || !deleteIds.isEmpty() || resource.isLockFlag() ||
+            (preUser.getBranchId() == null && resource.getBranchId() != null) ||
             (preUser.getBranchId() != null && resource.getBranchId() == null) ||
             (preUser.getBranchId() != null && !preUser.getBranchId().equals(resource.getBranchId()))) {
             // delete all token of user

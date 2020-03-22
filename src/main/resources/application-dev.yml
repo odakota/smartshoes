@@ -53,11 +53,23 @@ spring:
               cleanShutdown: true
   mvc:
     throw-exception-if-no-handler-found: true
+  mail:
+    default-encoding: UTF-8
+    host: smtp.gmail.com
+    username: haidvph05438@fpt.edu.vn
+    password: ${PASS_EMAIL}
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    protocol: smtp
+    test-connection: false
+    send-from: doanhai8080@gmail.com
 logging:
   config: "classpath:log4j2-spring.xml"
-email:
-  send:
-    from: doanhai8080@gmail.com
 storage-service:
   bucket-name: smartshoes
   img-storage-name: img

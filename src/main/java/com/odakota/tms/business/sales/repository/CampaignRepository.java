@@ -24,4 +24,8 @@ public interface CampaignRepository extends BaseRepository<Campaign, CampaignCon
            "and ((:#{@userSession.branchId} is null and (:#{#condition.branchId} is null " +
            "or e.branchId = :#{#condition.branchId})) or e.branchId = :#{@userSession.branchId}) ")
     Page<Campaign> findByCondition(CampaignCondition condition, Pageable pageable);
+
+    boolean existsByBranchIdAndNameAndDeletedFlagFalse(Long branchId, String name);
+
+    boolean existsByBranchIdAndNameAndDeletedFlagFalseAndIdNot(Long branchId, String name, Long id);
 }

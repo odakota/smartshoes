@@ -1,89 +1,90 @@
-//package com.odakota.tms.system.service.email;
-//
-//import com.odakota.tms.enums.file.TemplateName;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.core.io.ByteArrayResource;
-//import org.springframework.core.io.FileSystemResource;
-//import org.springframework.core.io.InputStreamSource;
-//import org.springframework.mail.javamail.MimeMessageHelper;
-//import org.springframework.messaging.MessagingException;
-//import org.springframework.stereotype.Service;
-//import org.thymeleaf.TemplateEngine;
-//import org.thymeleaf.context.Context;
-//
-//import java.nio.charset.StandardCharsets;
-//import java.util.List;
-//import java.util.Map;
-//import java.util.Objects;
-//
-///**
-// * @author haidv
-// * @version 1.0
-// */
-//@Service
-//public class SendMailServiceImpl implements SendMailService {
-//
-//    private final TemplateEngine templateEngine;
-//
-//    @Autowired
-//    public SendMailServiceImpl(TemplateEngine templateEngine) {
-//        this.templateEngine = templateEngine;
-//    }
-//
-//    public void send(List<String> recipients,
-//                     String subject,
-//                     TemplateName templateName,
-//                     Map<String, Object> data,
-//                     String[] attachments) throws MessagingException {
-//
-//        MimeMessage mimeMessage = this.mailSender.createMimeMessage();
-//        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, IS_MULTIPART,
-//                                                                    StandardCharsets.UTF_8.name());
-//        composeMessageHeader(recipients, subject, attachments, mimeMessageHelper);
-//        mimeMessageHelper.setText(this.buildMessage(templateName, data), IS_HTML);
-//        this.mailSender.send(mimeMessage);
-//    }
-//
-//    public void send(List<String> recipients,
-//                     String subject,
-//                     TemplateName templateName,
-//                     Map<String, Object> data,
-//                     String[] attachments,
-//                     String imageResourceName,
-//                     byte[] imageBytes,
-//                     String imageContentType) throws MessagingException {
-//
-//        InputStreamSource imageSource = new ByteArrayResource(imageBytes);
-//        MimeMessage mimeMessage = this.mailSender.createMimeMessage();
-//        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, IS_MULTIPART,
-//                                                                    StandardCharsets.UTF_8.name());
-//        composeMessageHeader(recipients, subject, attachments, mimeMessageHelper);
-//        mimeMessageHelper.setText(this.buildMessage(templateName, data), IS_HTML);
-//        mimeMessageHelper.addInline(imageResourceName, imageSource, imageContentType);
-//        this.mailSender.send(mimeMessage);
-//    }
-//
-//    private void composeMessageHeader(List<String> recipients,
-//                                      String subject,
-//                                      String[] attachments,
-//                                      MimeMessageHelper messageHelper) throws MessagingException {
-//        String[] recipientsArr = new String[recipients.size()];
-//        messageHelper.setFrom(sendMailFrom);
-//        messageHelper.setTo(recipients.toArray(recipientsArr));
-//        messageHelper.setSubject(subject);
-//        if (attachments != null) {
-//            for (String filename : attachments) {
-//                FileSystemResource file = new FileSystemResource(filename);
-//                messageHelper.addAttachment(Objects.requireNonNull(file.getFilename()), file);
-//            }
-//        }
-//    }
-//
-//    private String buildMessage(TemplateName templateName, Map<String, Object> data) {
-//        Context context = new Context();
-//        for (Map.Entry<String, Object> entry : data.entrySet()) {
-//            context.setVariable(entry.getKey(), entry.getValue());
-//        }
-//        return templateEngine.process(templateName.getValue(), context);
-//    }
-//}
+package com.odakota.tms.system.service.email;
+
+import com.odakota.tms.enums.file.TemplateName;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamSource;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.messaging.MessagingException;
+import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+
+import javax.mail.internet.MimeMessage;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
+
+/**
+ * @author haidv
+ * @version 1.0
+ */
+@Slf4j
+@Service
+public class SendMailServiceImpl implements SendMailService {
+
+    private final JavaMailSender javaMailSender;
+
+    private final TemplateEngine templateEngine;
+
+    @Value("${spring.mail.send-from}")
+    private String sendMailFrom;
+
+    @Autowired
+    public SendMailServiceImpl(TemplateEngine templateEngine,
+                               JavaMailSender javaMailSender) {
+        this.templateEngine = templateEngine;
+        this.javaMailSender = javaMailSender;
+    }
+
+    @Override
+    public void sendSimpleMail(String subject, String sendTo, TemplateName templateName, Map<String, Object> data) {
+        log.info("------send simple mail start------");
+        try {
+            final MimeMessage mimeMessage = this.javaMailSender.createMimeMessage();
+            final MimeMessageHelper message = new MimeMessageHelper(mimeMessage, StandardCharsets.UTF_8.name());
+            message.setSubject(subject);
+            message.setFrom(sendMailFrom);
+            message.setTo(sendTo);
+            message.setText(buildContent(templateName, data), true);
+            // send mail
+            this.javaMailSender.send(mimeMessage);
+        } catch (MessagingException | javax.mail.MessagingException ex) {
+            log.error("Send email error: ", ex);
+        }
+        log.info("------send simple mail end------");
+    }
+
+    @Override
+    public void sendMailWithAttachment(String subject, String sendTo, TemplateName templateName,
+                                       Map<String, Object> data, String attachmentFileName, byte[] attachmentBytes,
+                                       String attachmentContentType) {
+        log.info("------send mail with attachment start------");
+        try {
+            MimeMessage mimeMessage = this.javaMailSender.createMimeMessage();
+            MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, StandardCharsets.UTF_8.name());
+            message.setSubject(subject);
+            message.setFrom(sendMailFrom);
+            message.setTo(sendTo);
+            message.setText(buildContent(templateName, data), true);
+            // add the attachment
+            InputStreamSource attachmentSource = new ByteArrayResource(attachmentBytes);
+            message.addAttachment(attachmentFileName, attachmentSource, attachmentContentType);
+            // send mail
+            this.javaMailSender.send(mimeMessage);
+        } catch (MessagingException | javax.mail.MessagingException ex) {
+            log.error("Send email error: ", ex);
+        }
+        log.info("------send mail with attachment end------");
+    }
+
+    private String buildContent(TemplateName templateName, Map<String, Object> data) {
+        Context context = new Context();
+        for (Map.Entry<String, Object> entry : data.entrySet()) {
+            context.setVariable(entry.getKey(), entry.getValue());
+        }
+        return templateEngine.process(templateName.getValue(), context);
+    }
+}

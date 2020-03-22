@@ -6,6 +6,7 @@ import com.odakota.tms.business.auth.repository.PermissionRepository;
 import com.odakota.tms.business.auth.repository.PermissionRoleRepository;
 import com.odakota.tms.business.auth.resource.PermissionRoleResource;
 import com.odakota.tms.business.auth.resource.PermissionRoleResource.PermissionRoleCondition;
+import com.odakota.tms.business.process.service.QuartzScheduleService;
 import com.odakota.tms.constant.MessageCode;
 import com.odakota.tms.system.base.BaseService;
 import com.odakota.tms.system.config.exception.CustomException;
@@ -29,12 +30,16 @@ public class PermissionRoleService extends BaseService<PermissionRole, Permissio
 
     private final PermissionRepository permissionRepository;
 
+    private final QuartzScheduleService quartzScheduleService;
+
     @Autowired
     public PermissionRoleService(PermissionRoleRepository permissionRoleRepository,
-                                 PermissionRepository permissionRepository) {
+                                 PermissionRepository permissionRepository,
+                                 QuartzScheduleService quartzScheduleService) {
         super(permissionRoleRepository);
         this.permissionRoleRepository = permissionRoleRepository;
         this.permissionRepository = permissionRepository;
+        this.quartzScheduleService = quartzScheduleService;
     }
 
     /**
@@ -81,5 +86,9 @@ public class PermissionRoleService extends BaseService<PermissionRole, Permissio
         deleteIds.forEach(tmp -> permissionRoleRepository
                 .findByRoleIdAndPermissionIdAndDeletedFlagFalse(resource.getRoleId(), tmp)
                 .ifPresent(permissionRoleRepository::delete));
+        // send notification
+        if (!addIds.isEmpty() || !deleteIds.isEmpty()) {
+            quartzScheduleService.creatSendNotificationJob(resource.getRoleId());
+        }
     }
 }

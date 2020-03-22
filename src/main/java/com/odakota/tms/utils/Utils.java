@@ -1,8 +1,13 @@
 package com.odakota.tms.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -16,6 +21,48 @@ public class Utils {
 
     public static String convertToString(Date date) {
         return date == null ? null : date.toString();
+    }
+
+    public static String convertToStringFormat(Date date, String format) {
+        if (date == null) {
+            return null;
+        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+        return dateFormat.format(date);
+    }
+
+    public static Date calculationTime(Date date, int day, int house, int minute, int second) {
+        if (date == null) {
+            return null;
+        }
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        if (day > 0) {
+            calendar.set(Calendar.DATE, day);
+        }
+        if (house > 0) {
+            calendar.set(Calendar.HOUR, house);
+        }
+        if (minute > 0) {
+            calendar.set(Calendar.MINUTE, minute);
+        }
+        if (second > 0) {
+            calendar.set(Calendar.SECOND, second);
+        }
+        return calendar.getTime();
+    }
+
+    public static String toJson(Object object) {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        String jsonString = "";
+        try {
+            jsonString = mapper.writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            jsonString = "Can't build json from object";
+        }
+        return jsonString;
     }
 
     /**

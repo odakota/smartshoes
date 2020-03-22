@@ -1,6 +1,8 @@
 package com.odakota.tms.business.sales.resource;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.odakota.tms.business.sales.entity.Campaign;
+import com.odakota.tms.constant.Constant;
 import com.odakota.tms.system.base.BaseCondition;
 import com.odakota.tms.system.base.BaseResource;
 import lombok.AllArgsConstructor;
@@ -9,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author haidv
@@ -23,8 +26,10 @@ public class CampaignResource extends BaseResource<Campaign> {
 
     private Long branchId;
 
+    @JsonFormat(pattern = Constant.YYYY_MM_DD_HH_MM_SS, timezone = "GMT+7")
     private Date startDate;
 
+    @JsonFormat(pattern = Constant.YYYY_MM_DD_HH_MM_SS, timezone = "GMT+7")
     private Date endDate;
 
     private String description;
@@ -32,6 +37,13 @@ public class CampaignResource extends BaseResource<Campaign> {
     private Integer discountType;
 
     private Long discountValue;
+
+    private Boolean selectAll;
+
+    private List<Long> selectProduct;
+
+    private List<Long> selectCategory;
+
 
     /**
      * @author haidv

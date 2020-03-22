@@ -11,9 +11,7 @@ import com.odakota.tms.system.config.data.ResponseData;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -42,5 +40,13 @@ public class NotificationController extends BaseController<Notification, Notific
     @GetMapping(value = "/notifications", produces = ApiVersion.API_VERSION_1)
     public ResponseEntity<?> getNotification(@ModelAttribute @Valid BaseParameter baseReq) {
         return ResponseEntity.ok(new ResponseData<>().success(notificationService.getNotification(baseReq)));
+    }
+
+    @RequiredAuthentication
+    @ApiOperation("API read notification of current user")
+    @PutMapping(value = "/notifications/{id}/read", produces = ApiVersion.API_VERSION_1)
+    public ResponseEntity<?> readNotification(@PathVariable Long id) {
+        notificationService.readNotification(id);
+        return ResponseEntity.noContent().build();
     }
 }

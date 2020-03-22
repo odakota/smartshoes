@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <permissionMetaResource http-equiv="Content-Type" content="text/html; charset=UTF-8"></permissionMetaResource>
+    <title>Automated mail</title>
+</head>
+<body>
+<p> Dear root</p>
+<p>
+    By the time: <b> <span th:text="${time}"></span> </b> the <b> <span th:text="${job}"></span> </b> process had failed
+</p>
+<p>
+    Regards, <br/>
+    <em>The IT Team</em>
+</p>
+<br>
+<br>
+<p><i>This is an automated mail sent from the system. You do not need to reply to this message.</i></p>
+</body>
+</html>

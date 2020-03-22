@@ -1,4 +1,4 @@
-package com.odakota.tms.system.service;
+package com.odakota.tms.system.service.websocket;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -10,7 +10,9 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
@@ -19,10 +21,10 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 @Slf4j
 @Component
-@ServerEndpoint("/websocket/{userId}")
+@ServerEndpoint("/notification/{userId}")
 public class WebSocket {
 
-    private static CopyOnWriteArraySet<WebSocket> webSockets = new CopyOnWriteArraySet<>();
+    private static Set<WebSocket> webSockets = new CopyOnWriteArraySet<>();
     private static Map<Long, Session> sessionPool = new HashMap<>();
     private Session session;
 
@@ -31,13 +33,13 @@ public class WebSocket {
         this.session = session;
         webSockets.add(this);
         sessionPool.put(userId, session);
-        log.info("[Websocket message] There are new connections, the total is:" + webSockets.size());
+        log.info("[Websocket] There are new connections, the total is:" + webSockets.size());
     }
 
     @OnClose
     public void onClose() {
         webSockets.remove(this);
-        log.info("[Websocket message] Connection is disconnected, the total is:" + webSockets.size());
+        log.info("[Websocket] Connection is disconnected, the total is:" + webSockets.size());
     }
 
     @OnMessage
@@ -47,12 +49,12 @@ public class WebSocket {
 
     // this is a broadcast message
     public void sendAllMessage(String message) {
-        log.info("[Websocket message] Broadcast message:" + message);
         for (WebSocket webSocket : webSockets) {
             if (webSocket.session.isOpen()) {
                 webSocket.session.getAsyncRemote().sendText(message);
             }
         }
+        log.info("[Websocket] Broadcast message:" + message);
     }
 
     // this is a single point message
@@ -61,16 +63,17 @@ public class WebSocket {
         if (ses != null && ses.isOpen()) {
             ses.getAsyncRemote().sendText(message);
         }
+        log.info("[Websocket] single point message:" + message);
     }
 
     // this is a single point message multiple
-    public void sendMoreMessage(String[] userIds, String message) {
-        for (String userId : userIds) {
+    public void onMessage(List<Long> userIds, String message) {
+        for (Long userId : userIds) {
             Session ses = sessionPool.get(userId);
             if (ses != null && ses.isOpen()) {
                 ses.getAsyncRemote().sendText(message);
-                log.info("[websocket message] single point message:" + message);
             }
         }
+        log.info("[Websocket] single point message multiple:" + message);
     }
 }

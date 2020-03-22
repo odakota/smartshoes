@@ -7,7 +7,7 @@ package com.odakota.tms.constant;
 public class Constant {
 
     // DEFAULT VALUE
-    public static final int ROLE_ID_DEFAULT = 2; // roleId = 1 : root; roleId = 2 : normal role
+    public static final long ROLE_ID_DEFAULT = 2; // roleId = 1 : root; roleId = 2 : normal role
     public static final int USER_ID_DEFAULT = 1;
     public static final int BRANCH_ID_DEFAULT = 1;
     public static final int NUMBER_OF_ROLE_DEFAULT = 2;
@@ -30,13 +30,8 @@ public class Constant {
     // DATETIME FORMAT
     public static final String YYYY_MM_DD = "yyyy-MM-dd";
     public static final String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
-    public static final String DD_MM_YYYY_HH_MM_SS = "dd-MM-yyyy hh:mm:ss";
-    // JOB TASK NAME
-    public static final String IMPORT_USER = "JTN0001";
-    public static final String JTN0001_PATH_FILE = "file-path";
-    // SUBJECT EMAIL
-    public static final String SUBJECT_CREATE_ACCOUNT = "Login information";
-    public static final String SUBJECT_OTP_CONFIRM = "Verify email";
+    public static final String DD_MM_YYYY_HH_MM_SS = "dd-MM-yyyy HH:mm:ss";
+    public static final String HH_MM_SS_DD_MM_YYYY = "HH:mm:ss dd-MM-yyyy";
     // OTP PREFIX KEY
     public static final String LOGIN_PHONE_PREFIX_KEY = "login-otp-";
     public static final String FORGOT_PASS_PREFIX_KEY = "forgot-otp-";

@@ -100,7 +100,7 @@ values ('root', '$2a$10$DVdKtQPt6gByXrXZNtMU8.7g5LL.TpLXno72T7NY03zzLt6382iLG', 
         '201 Giải Phóng', false, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
        ('namdq', '$2a$10$DVdKtQPt6gByXrXZNtMU8.7g5LL.TpLXno72T7NY03zzLt6382iLG', 'Đỗ Nam', 1, '1995-01-02',
         'img/avatar/emp-default.jpg', 'namdq@gmail.com', '+84934576890', 2, 35, 535,
-        '201 Giải Phóng', false, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false);
+        '201 Giải Phóng', false, 1, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false);
 
 --
 -- Insert data to table `customer_tbl`
@@ -165,7 +165,7 @@ values (1, 'Home', null, '/dashboard/analysis', 'dashboard/Analysis', null, null
         true, false, null, false, null, false, null, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
        (6, 'Campaigns', null, '/campaigns', 'campaign/CampaignList', null, null, 0, null, null, 6.00, false, 'gift',
         true, false, null, false, null, false, null, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
-       (7, 'Reports', null, '/reports', 'layouts/RouteView', null, null, 0, null, null, 7.00, false, 'file',
+       (7, 'Reports', null, '/reports', 'report/ReportSetting', null, null, 0, null, null, 7.00, false, 'file',
         true, false, null, false, null, false, null, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
        (8, 'Profile', null, '/profile', 'layouts/RouteView', null, null, 0, null, null, 8.00, false, 'profile',
         true, false, null, false, null, false, null, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
@@ -286,7 +286,8 @@ values (1, 'Home', null, '/dashboard/analysis', 'dashboard/Analysis', null, null
         null, false, null, false, true, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
        (5103, 'Read tax', 51, null, null, null, null, 2, 'tax:read', '1', 4.00, false, null, false, true,
         null, false, null, false, true, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
-       (52, 'Payment method', 5, '/sale/payment', 'sale/PaymentMethodList', null, null, 1, null, '1', 1.00, false, 'credit-card',
+       (52, 'Payment method', 5, '/sale/payment', 'sale/PaymentMethodList', null, null, 1, null, '1', 1.00, false,
+        'credit-card',
         true, false, false, false, null, false, null, false, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
        (5200, 'Create payment', 52, null, null, null, null, 2, 'payment:create', '1', 1.00, false, null, false,
         true, null, false, null, false, true, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
@@ -314,15 +315,42 @@ select r.id,
        p.perms
 from role_tbl r
          cross join permission_tbl p
-where r.id = 1
-  and p.deleted_flag = false;
+where p.deleted_flag = false and r.id = 1;
+insert into permission_role_tbl (role_id, permission_id, updated_by, created_by, updated_date, created_date,
+                                 deleted_flag, api_id)
+select r.id,
+       p.id,
+       1,
+       1,
+       '2020-01-01 00:00:00',
+       '2020-01-01 00:00:00',
+       false,
+       p.perms
+from role_tbl r
+         cross join permission_tbl p
+where p.deleted_flag = false and r.id = 3 and p.id not in (22, 2020, 2021, 2022, 2023, 2024, 2025);
+insert into permission_role_tbl (role_id, permission_id, updated_by, created_by, updated_date, created_date,
+                                 deleted_flag, api_id)
+select r.id,
+       p.id,
+       1,
+       1,
+       '2020-01-01 00:00:00',
+       '2020-01-01 00:00:00',
+       false,
+       p.perms
+from role_tbl r
+         cross join permission_tbl p
+where p.deleted_flag = false and r.id = 2 and p.id in (1, 8);
 
 --
 -- Insert data to table `user_role_tbl`
 --
 insert into user_role_tbl(role_id, user_id, updated_by, created_by, updated_date, created_date, deleted_flag)
 values (1, 1, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
-       (2, 2, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false);
+       (2, 1, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
+       (2, 2, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
+       (3, 2, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false);
 
 --
 -- Insert data to table province_tbl

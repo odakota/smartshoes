@@ -53,11 +53,23 @@ spring:
               cleanShutdown: true
   mvc:
     throw-exception-if-no-handler-found: true
+  mail:
+    default-encoding: UTF-8
+    host: ${HOST_EMAIL}
+    username: ${USER_EMAIL}
+    password: ${PASS_EMAIL}
+    port: ${PORT_EMAIL}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    protocol: smtp
+    test-connection: false
+    send-from: ${ROOT_EMAIL}
 logging:
   config: "classpath:log4j2-spring.xml"
-email:
-  send:
-    from: ${ROOT_EMAIL}
 storage-service:
   bucket-name: smartshoes
   img-storage-name: img

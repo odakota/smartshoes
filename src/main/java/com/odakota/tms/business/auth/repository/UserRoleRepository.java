@@ -37,4 +37,6 @@ public interface UserRoleRepository extends BaseRepository<UserRole, UserRoleCon
            "updatedDate = :#{T(java.time.LocalDateTime).now()} where roleId in ?1 and " +
            "roleId <> :#{T(com.odakota.tms.constant.Constant).ROLE_ID_DEFAULT}")
     void deleteByRoleId(List<Long> userId);
+
+    List<UserRole> findByRoleIdAndDeletedFlagFalse(Long roleId);
 }

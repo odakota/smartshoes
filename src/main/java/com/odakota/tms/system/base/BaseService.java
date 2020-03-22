@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 public abstract class BaseService<E extends BaseEntity, R extends BaseResource<E>, C extends BaseCondition> {
 
     private final BaseRepository<E, C> repository;
+
     protected ModelMapper mapper = Mappers.getMapper(ModelMapper.class);
 
     protected BaseService(BaseRepository<E, C> repository) {

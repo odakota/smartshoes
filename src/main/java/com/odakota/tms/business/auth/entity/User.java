@@ -6,10 +6,7 @@ import com.odakota.tms.system.base.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -37,6 +34,7 @@ public class User extends BaseEntity {
     private Gender sex;
 
     @Column(name = "birth_date")
+    @Temporal(TemporalType.DATE)
     private Date birthDay;
 
     @Column(name = "avatar")

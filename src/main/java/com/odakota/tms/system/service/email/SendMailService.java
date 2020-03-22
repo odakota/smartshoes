@@ -2,7 +2,6 @@ package com.odakota.tms.system.service.email;
 
 import com.odakota.tms.enums.file.TemplateName;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -11,6 +10,9 @@ import java.util.Map;
  */
 public interface SendMailService {
 
-    void sendMail(String subject, TemplateName templateName, Map<String, Object> data, List<String> sendToEmails,
-                  List<String> ccEmails, List<String> bccEmails);
+    void sendSimpleMail(String subject, String sendTo, TemplateName templateName, Map<String, Object> data);
+
+    void sendMailWithAttachment(String subject, String sendTo, TemplateName templateName,
+                                Map<String, Object> data, String attachmentFileName, byte[] attachmentBytes,
+                                String attachmentContentType);
 }

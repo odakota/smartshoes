@@ -4,9 +4,7 @@ import com.odakota.tms.system.base.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -33,6 +31,7 @@ public class Receipt extends BaseEntity {
     private String deliver;
 
     @Column(name = "receipt_date")
+    @Temporal(TemporalType.DATE)
     private Date receiptDate;
 
     @Column(name = "warehouse")

@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -33,4 +34,9 @@ public interface UserRepository extends BaseRepository<User, UserCondition> {
     Optional<User> findByUsernameOrPhoneAndDeletedFlagFalse(String username, String phone);
 
     long countByBranchIdAndDeletedFlagFalse(Long branchId);
+
+    @Query(value = "select u.* from user_tbl u where u.deleted_flag = false " +
+                   "and date_part('day', u.birth_date) = date_part('day', CURRENT_DATE)" +
+                   "and date_part('month', u.birth_date) = date_part('month', CURRENT_DATE) ", nativeQuery = true)
+    List<User> findByBirthDayToDay();
 }
