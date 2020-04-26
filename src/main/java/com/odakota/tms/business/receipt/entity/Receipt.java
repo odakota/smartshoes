@@ -45,4 +45,8 @@ public class Receipt extends BaseEntity {
 
     @Column(name = "approved_flag")
     private Boolean approvedFlag;
+
+    @Column(name = "approved_date")
+    @Temporal(TemporalType.DATE)
+    private Date approvedDate;
 }

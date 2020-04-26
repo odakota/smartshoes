@@ -7,6 +7,7 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * @author haidv
@@ -19,8 +20,14 @@ public class SalesOrderDetail extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 
-    @Column(name = "price")
-    private Long price;
+    @Column(name = "pre_price")
+    private Long prePrice;
+
+    @Column(name = "lst_price")
+    private Long lstPrice;
+
+    @Column(name = "sales_order_id")
+    private Long saleOrderId;
 
     @Column(name = "amount_product")
     private int amountProduct;
@@ -33,4 +40,24 @@ public class SalesOrderDetail extends BaseEntity {
 
     @Column(name = "allocation_product_id")
     private Long allocationProductId;
+
+    @Column(name = "product_id")
+    private Long productId;
+
+    @Column(name = "product_code")
+    private String productCode;
+
+    @Transient
+    private String productName;
+
+    public SalesOrderDetail() {
+    }
+
+    public SalesOrderDetail(String productCode, String productName, Long prePrice, Long lstPrice, int amountProduct) {
+        this.prePrice = prePrice;
+        this.lstPrice = lstPrice;
+        this.productName = productName;
+        this.productCode = productCode;
+        this.amountProduct = amountProduct;
+    }
 }

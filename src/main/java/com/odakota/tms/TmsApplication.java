@@ -15,6 +15,6 @@ public class TmsApplication {
 
     @PostConstruct
     public void started() {
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+        TimeZone.setDefault(TimeZone.getTimeZone("GMT+7"));
     }
 }

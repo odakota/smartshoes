@@ -11,6 +11,7 @@ import com.odakota.tms.constant.FieldConstant;
 import com.odakota.tms.constant.MessageCode;
 import com.odakota.tms.system.base.BaseParameter.FindCondition;
 import com.odakota.tms.system.base.BaseService;
+import com.odakota.tms.system.config.UserSession;
 import com.odakota.tms.system.config.exception.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,14 +31,17 @@ public class RoleService extends BaseService<Role, RoleResource, RoleCondition> 
 
     private final UserRoleRepository userRoleRepository;
 
+    private final UserSession userSession;
+
     @Autowired
     public RoleService(RoleRepository roleRepository,
                        PermissionRoleRepository permissionRoleRepository,
-                       UserRoleRepository userRoleRepository) {
+                       UserRoleRepository userRoleRepository, UserSession userSession) {
         super(roleRepository);
         this.roleRepository = roleRepository;
         this.permissionRoleRepository = permissionRoleRepository;
         this.userRoleRepository = userRoleRepository;
+        this.userSession = userSession;
     }
 
 
@@ -53,6 +57,7 @@ public class RoleService extends BaseService<Role, RoleResource, RoleCondition> 
         if (roleRepository.isExistedResource(null, FieldConstant.ROLE_CODE, resource.getRoleCode())) {
             throw new CustomException(MessageCode.MSG_ROLE_CODE_EXISTED, HttpStatus.CONFLICT);
         }
+        resource.setBranchId(userSession.getBranchId());
         return super.createResource(resource);
     }
 

@@ -13,7 +13,7 @@ public enum FileType {
     AVATAR(1);
 
     @Getter
-    private Integer value;
+    private final Integer value;
 
     FileType(Integer value) {
         this.value = value;

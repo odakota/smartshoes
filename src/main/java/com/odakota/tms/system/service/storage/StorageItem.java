@@ -16,11 +16,11 @@ import java.nio.file.Paths;
 @AllArgsConstructor
 public class StorageItem {
 
-    private StorageItemType type;
+    private final StorageItemType type;
 
-    private String path;
+    private final String path;
 
-    private StorageItemMetadata metadata;
+    private final StorageItemMetadata metadata;
 
     private byte[] content;
 

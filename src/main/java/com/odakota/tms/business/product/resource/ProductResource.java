@@ -31,6 +31,8 @@ public class ProductResource extends BaseResource<Product> {
 
     private Long price;
 
+    private Long lstPrice;
+
     private Long companySalesPrice;
 
     @JsonFormat(pattern = Constant.YYYY_MM_DD_HH_MM_SS, timezone = "GMT+7")

@@ -1,12 +1,14 @@
 package com.odakota.tms.business.sales.controller;
 
 import com.odakota.tms.business.sales.entity.SalesOrder;
+import com.odakota.tms.business.sales.resource.SaleResource;
 import com.odakota.tms.business.sales.resource.SalesOrderResource;
 import com.odakota.tms.business.sales.service.SalesOrderService;
 import com.odakota.tms.constant.ApiVersion;
 import com.odakota.tms.system.annotations.RequiredAuthentication;
 import com.odakota.tms.system.base.BaseController;
 import com.odakota.tms.system.base.BaseParameter;
+import com.odakota.tms.system.config.data.ResponseData;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -53,7 +55,7 @@ public class OrderController extends BaseController<SalesOrder, SalesOrderResour
     @RequiredAuthentication//(value = ApiId.R_ORDER)
     @GetMapping(value = "/orders/{id}", produces = ApiVersion.API_VERSION_1)
     public ResponseEntity<?> getSalesOrder(@PathVariable Long id) {
-        return super.getResource(id);
+        return ResponseEntity.ok(new ResponseData<>().success(salesOrderService.salesOrderDetails(id)));
     }
 
     /**
@@ -108,5 +110,30 @@ public class OrderController extends BaseController<SalesOrder, SalesOrderResour
     public ResponseEntity<Void> cancelSalesOrder(@PathVariable Long id) {
         salesOrderService.cancelSalesOrder(id);
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * API get campaign list
+     *
+     * @return {@link ResponseEntity}
+     */
+    @ApiOperation("API get campaign list")
+    @RequiredAuthentication//(value = ApiId.R_CAMPAIGN)
+    @PostMapping(value = "/sales", produces = ApiVersion.API_VERSION_1)
+    public ResponseEntity<?> sales(@RequestBody SaleResource saleResource) {
+        salesOrderService.sales(saleResource);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * API get campaign list
+     *
+     * @return {@link ResponseEntity}
+     */
+    @ApiOperation("API get campaign list")
+    @RequiredAuthentication//(value = ApiId.R_CAMPAIGN)
+    @GetMapping(value = "/payments", produces = ApiVersion.API_VERSION_1)
+    public ResponseEntity<?> getPayment() {
+        return ResponseEntity.ok(new ResponseData<>().success(salesOrderService.getPayment()));
     }
 }

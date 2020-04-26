@@ -7,7 +7,7 @@ package com.odakota.tms.constant;
 public class FilePath {
 
     public static final String AVATAR_IMAGE = "/avatar/{img-name}";
-    public static final String BRAND_IMAGE_PATH = "img/brand/";
+    public static final String INVENTORY_FILE_PATH = "/report/inventory/";
 
     private FilePath() {
     }

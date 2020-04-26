@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 /**
  * @author haidv
  * @version 1.0
@@ -28,4 +30,8 @@ public interface CampaignRepository extends BaseRepository<Campaign, CampaignCon
     boolean existsByBranchIdAndNameAndDeletedFlagFalse(Long branchId, String name);
 
     boolean existsByBranchIdAndNameAndDeletedFlagFalseAndIdNot(Long branchId, String name, Long id);
+
+    @Query("select c from Campaign c join CampaignItem ci on c.id = ci.campaignId where c.deletedFlag = false " +
+           "and ci.productId = ?1 and c.startDate >= current_timestamp ")
+    Optional<Campaign> findByItem(Long productId);
 }

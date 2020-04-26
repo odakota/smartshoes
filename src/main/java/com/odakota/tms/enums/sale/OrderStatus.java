@@ -15,7 +15,7 @@ public enum  OrderStatus {
     CANCEL(3);
 
     @Getter
-    private Integer value;
+    private final Integer value;
 
     OrderStatus(Integer value) {
         this.value = value;

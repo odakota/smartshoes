@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -23,6 +24,11 @@ public class Utils {
         return date == null ? null : date.toString();
     }
 
+
+    public static String convertToStringFormat(Date date) {
+        return convertToStringFormat(date, "yyyy-MM-dd");
+    }
+
     public static String convertToStringFormat(Date date, String format) {
         if (date == null) {
             return null;
@@ -31,23 +37,63 @@ public class Utils {
         return dateFormat.format(date);
     }
 
+    public static Date convertToDate(String date, String format) {
+        if (date == null) {
+            return null;
+        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+        try {
+            return dateFormat.parse(date);
+        } catch (ParseException e) {
+            return new Date();
+        }
+    }
+
+    public static Date calculationTime(Date date, int day) {
+        return calculationTime(date, day, 0, 0, 0);
+    }
+
+    public static Date calculationTimeMonth(Date date, int month) {
+        return calculationTime(date, month, 0, 0, 0, 0);
+    }
+
+    public static Date calculationTime(Date date, int minute, int second) {
+        return calculationTime(date, 0, minute, second);
+    }
+
+    public static Date calculationTime(Date date, int house, int minute, int second) {
+        return calculationTime(date, 0, house, minute, second);
+    }
+
     public static Date calculationTime(Date date, int day, int house, int minute, int second) {
+        return calculationTime(date, 0, day, house, minute, second);
+    }
+
+    public static int getCurrentYear() {
+        Calendar calendar = Calendar.getInstance();
+        return calendar.get(Calendar.YEAR);
+    }
+
+    public static Date calculationTime(Date date, int month, int day, int house, int minute, int second) {
         if (date == null) {
             return null;
         }
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        if (day > 0) {
-            calendar.set(Calendar.DATE, day);
+        if (month != 0) {
+            calendar.add(Calendar.MONTH, month);
         }
-        if (house > 0) {
-            calendar.set(Calendar.HOUR, house);
+        if (day != 0) {
+            calendar.add(Calendar.DATE, day);
         }
-        if (minute > 0) {
-            calendar.set(Calendar.MINUTE, minute);
+        if (house != 0) {
+            calendar.add(Calendar.HOUR, house);
         }
-        if (second > 0) {
-            calendar.set(Calendar.SECOND, second);
+        if (minute != 0) {
+            calendar.add(Calendar.MINUTE, minute);
+        }
+        if (second != 0) {
+            calendar.add(Calendar.SECOND, second);
         }
         return calendar.getTime();
     }

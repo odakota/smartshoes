@@ -14,7 +14,7 @@ public enum InputType {
     OFFLINE(2);
 
     @Getter
-    private Integer value;
+    private final Integer value;
 
     InputType(Integer value) {
         this.value = value;

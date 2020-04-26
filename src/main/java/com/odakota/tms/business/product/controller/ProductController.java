@@ -37,11 +37,24 @@ public class ProductController extends BaseController<Product, ProductResource> 
      * @param baseReq List acquisition request
      * @return {@link ResponseEntity}
      */
-    @ApiOperation("API get product list")
+    @ApiOperation("API get all product list")
     @RequiredAuthentication//(value = ApiId.R_PRODUCT)
     @GetMapping(value = "/products", produces = ApiVersion.API_VERSION_1)
     public ResponseEntity<?> getProducts(@ModelAttribute @Valid BaseParameter baseReq) {
         return super.getResources(baseReq);
+    }
+
+    /**
+     * API get product list sale
+     *
+     * @return {@link ResponseEntity}
+     * @param categoryId
+     */
+    @ApiOperation("API get product list sale")
+    @RequiredAuthentication//(value = ApiId.R_PRODUCT)
+    @GetMapping(value = "/products/sale", produces = ApiVersion.API_VERSION_1)
+    public ResponseEntity<?> getProducts(@RequestParam(required = false) Long categoryId, @RequestParam(required = false) String productName) {
+        return ResponseEntity.ok(new ResponseData<>().success(productService.getProducts(categoryId, productName)));
     }
 
     /**

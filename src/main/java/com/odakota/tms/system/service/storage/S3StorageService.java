@@ -13,10 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -216,6 +213,26 @@ public class S3StorageService {
         final ObjectMetadata objectMetadata = convertToObjectMetadata(metadata);
         try {
             amazonS3.putObject(bucketName, path, input, objectMetadata);
+        } catch (AmazonS3Exception e) {
+            if (e.getErrorCode().equals(ERROR_CODE_NO_SUCH_KEY)) {
+                throw new CustomException(MessageCode.MSG_FILE_NOT_FOUND, HttpStatus.NOT_FOUND);
+            } else {
+                throw new CustomException(MessageCode.MSG_UPLOAD_S3_FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } catch (SdkClientException e) {
+            throw new CustomException(MessageCode.MSG_UPLOAD_S3_FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * save the file in the location specified by path
+     *
+     * @param path     file path
+     * @param file     file
+     */
+    public void put(final String path, final File file) {
+        try {
+            amazonS3.putObject(bucketName, path, file);
         } catch (AmazonS3Exception e) {
             if (e.getErrorCode().equals(ERROR_CODE_NO_SUCH_KEY)) {
                 throw new CustomException(MessageCode.MSG_FILE_NOT_FOUND, HttpStatus.NOT_FOUND);

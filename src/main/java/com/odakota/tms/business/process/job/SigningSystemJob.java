@@ -22,7 +22,7 @@ public class SigningSystemJob {
 
     @Bean(name = "auto delete token expired job")
     public void clearTokenScheduler() throws SchedulerException {
-        quartzScheduleService.creatDeleteTokenExpiredJob();
-        quartzScheduleService.creatHappyBirthDayJob();
+        quartzScheduleService.createDeleteTokenExpiredJob();
+        quartzScheduleService.createHappyBirthDayJob();
     }
 }

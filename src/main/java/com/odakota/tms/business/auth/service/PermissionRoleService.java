@@ -88,7 +88,7 @@ public class PermissionRoleService extends BaseService<PermissionRole, Permissio
                 .ifPresent(permissionRoleRepository::delete));
         // send notification
         if (!addIds.isEmpty() || !deleteIds.isEmpty()) {
-            quartzScheduleService.creatSendNotificationJob(resource.getRoleId());
+            quartzScheduleService.createSendNotificationJob(resource.getRoleId());
         }
     }
 }

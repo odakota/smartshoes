@@ -57,7 +57,7 @@ public class CampaignService extends BaseService<Campaign, CampaignResource, Cam
         }
         CampaignResource campaignResource = super.createResource(resource);
         quartzScheduleService
-                .creatApplyCampaignItemJob(resource.getBranchId(), campaignResource, resource.getSelectAll(),
+                .createApplyCampaignItemJob(resource.getBranchId(), campaignResource, resource.getSelectAll(),
                                            resource.getSelectCategory(), resource.getSelectProduct());
         return campaignResource;
     }
@@ -81,7 +81,7 @@ public class CampaignService extends BaseService<Campaign, CampaignResource, Cam
         CampaignResource campaignResource = super.updateResource(id, resource);
         quartzScheduleService.deleteApplyCampaignItemJob(resource.getBranchId(), resource.getName());
         quartzScheduleService
-                .creatApplyCampaignItemJob(resource.getBranchId(), campaignResource, resource.getSelectAll(),
+                .createApplyCampaignItemJob(resource.getBranchId(), campaignResource, resource.getSelectAll(),
                                            resource.getSelectCategory(), resource.getSelectProduct());
         return resource;
     }

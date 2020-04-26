@@ -570,6 +570,7 @@ create table receipt_tbl (
     warehouse     varchar(500) not null,
     branch_id     bigint       not null,
     note          varchar(1024),
+    approved_date date,
     approved_flag boolean default false,
     file_path     text,
     updated_by    bigint,
@@ -676,7 +677,8 @@ create table sales_order_tbl (
     sale_type    smallint not null,
     order_type   smallint not null,
     status       smallint not null,
-    tax          numeric  not null,
+    branch_id    bigint   not null,
+    tax          numeric,
     total_amount numeric  not null,
     updated_by   bigint,
     created_by   bigint,
@@ -693,15 +695,77 @@ comment on column sales_order_tbl.status is 'Order status: 1-Unpaid; 2-Paid; 3-C
 --
 create table sales_order_detail_tbl (
     id                    bigint primary key generated always as identity,
-    allocation_product_id bigint  not null,
-    price                 numeric not null,
-    amount_product        int     not null,
-    discount              numeric not null,
-    discount_reason       text    not null,
+    allocation_product_id bigint      not null,
+    product_id            bigint      not null,
+    product_code          varchar(16) not null,
+    pre_price             numeric     not null,
+    lst_price             numeric     not null,
+    sales_order_id        bigint      not null,
+    amount_product        int         not null,
+    discount              numeric,
+    discount_reason       text,
     updated_by            bigint,
     created_by            bigint,
     updated_date          timestamp,
     created_date          timestamp,
     deleted_flag          boolean default false,
-    foreign key (allocation_product_id) references allocation_product_tbl (id)
+    foreign key (allocation_product_id) references allocation_product_tbl (id),
+    foreign key (sales_order_id) references sales_order_tbl (id)
+);
+
+--
+-- Table structure for table report_setting_tbl
+--
+create table report_setting_tbl (
+    id             bigint primary key generated always as identity,
+    branch_id      bigint,
+    report_type    smallint,
+    daily_time     varchar(24),
+    monthly_time   varchar(24),
+    monthly_day    int,
+    yearly_time    varchar(24),
+    yearly_day     int,
+    yearly_month   int,
+    receiver       text     not null,
+    process_status smallint not null,
+    updated_by     bigint,
+    created_by     bigint,
+    updated_date   timestamp,
+    created_date   timestamp,
+    deleted_flag   boolean default false,
+    foreign key (branch_id) references branch_tbl (id)
+);
+comment on column report_setting_tbl.process_status is 'Process status: 1-Pause; 2-In Progress;';
+comment on column report_setting_tbl.report_type is 'Report type: 1-Inventory report; 2-Sales summary reports; 3-Reported revenue by Staff; 4-Report bestsellers';
+
+--
+-- Table structure for table inventory_report_tbl
+--
+create table inventory_report_tbl (
+    id           bigint primary key generated always as identity,
+    branch_id    bigint,
+    report_date  date         not null,
+    product_code varchar(16)  not null,
+    product_name varchar(200) not null,
+    final_total  bigint       not null,
+    output_total bigint       not null,
+    input_total  bigint       not null,
+    pre_total    bigint       not null,
+    created_date timestamp,
+    foreign key (branch_id) references branch_tbl (id)
+);
+
+--
+-- Table structure for table bestseller_report_tbl
+--
+create table bestseller_report_tbl (
+    id           bigint primary key generated always as identity,
+    branch_id    bigint,
+    report_date  varchar(7)   not null,
+    product_code varchar(16)  not null,
+    product_name varchar(200) not null,
+    total_sale   bigint       not null,
+    order_number bigint       not null,
+    created_date timestamp,
+    foreign key (branch_id) references branch_tbl (id)
 );

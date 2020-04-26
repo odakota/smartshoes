@@ -16,7 +16,7 @@ public enum  Segment {
     BIG(4);
 
     @Getter
-    private Integer value;
+    private final Integer value;
 
     Segment(Integer value) {
         this.value = value;

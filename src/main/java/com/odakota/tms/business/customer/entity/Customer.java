@@ -79,5 +79,5 @@ public class Customer extends BaseEntity {
 
     @Column(name = "input_type")
     @Convert(converter = InputTypeConverter.class)
-    private InputType inputType;
+    private InputType inputType = InputType.OFFLINE;
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN" monitorInterval="60">
     <Properties>
-        <Property name="log-path">/logs/jp/tms/</Property>
+        <Property name="log-path">logs/jp/tms/</Property>
         <Property name="LOG_PATTERN">
             %d{yyyy-MM-dd HH:mm:ss.SSS}{UTC} %-5level [%-20X{X-Request-ID}] %logger{36} - Line %L - %M - %msg%n
         </Property>

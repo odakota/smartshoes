@@ -14,13 +14,13 @@ public enum FileGroup {
     CUSTOMER(4, "customer", "");
 
     @Getter
-    private Integer value;
+    private final Integer value;
 
     @Getter
-    private String name;
+    private final String name;
 
     @Getter
-    private String jobTaskName;
+    private final String jobTaskName;
 
     FileGroup(Integer value, String name, String jobTaskName) {
         this.value = value;

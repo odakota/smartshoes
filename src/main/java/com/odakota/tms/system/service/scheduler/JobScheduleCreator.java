@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * @author haidv
@@ -22,6 +23,22 @@ import java.util.Date;
 @Slf4j
 @Component
 public class JobScheduleCreator {
+
+    /**
+     * Create Quartz Job.
+     *
+     * @param jobClass   Class whose executeInternal() method needs to be called.
+     * @param isDurable  Job needs to be persisted even after completion. if true, job will be persisted, not
+     *                   otherwise.
+     * @param context    Spring application context.
+     * @param jobName    Job name.
+     * @param jobGroup   Job group.
+     * @return JobDetail object
+     */
+    public JobDetail createJob(Class<? extends QuartzJobBean> jobClass, boolean isDurable,
+                               ApplicationContext context, String jobName, String jobGroup) {
+        return this.createJob(jobClass, isDurable, context, jobName, jobGroup, null);
+    }
 
     /**
      * Create Quartz Job.
@@ -61,12 +78,27 @@ public class JobScheduleCreator {
      */
     public CronTrigger createCronTrigger(String triggerName, String triggerGroup, Date startTime, String cronExpression,
                                          int misFireInstruction) {
+        return createCronTrigger(triggerName, triggerGroup, startTime, cronExpression, misFireInstruction, null);
+    }
+
+    /**
+     * Create cron trigger.
+     *
+     * @param triggerName        Trigger name.
+     * @param startTime          Trigger start time.
+     * @param cronExpression     Cron expression.
+     * @param misFireInstruction Misfire instruction (what to do in case of misfire happens).
+     * @return {@link CronTrigger}
+     */
+    public CronTrigger createCronTrigger(String triggerName, String triggerGroup, Date startTime, String cronExpression,
+                                         int misFireInstruction, TimeZone timeZone) {
         CronTriggerFactoryBean factoryBean = new CronTriggerFactoryBean();
         factoryBean.setName(triggerName);
         factoryBean.setGroup(triggerGroup);
         factoryBean.setStartTime(startTime);
         factoryBean.setCronExpression(cronExpression);
         factoryBean.setMisfireInstruction(misFireInstruction);
+        factoryBean.setTimeZone(timeZone);
         try {
             factoryBean.afterPropertiesSet();
         } catch (ParseException e) {

@@ -23,7 +23,7 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
         jdbc:
-          time_zone: UTC
+          time_zone: GMT+7
           batch-size: 100
           generate_statistics: true
           batch_versioned_data: true
@@ -68,12 +68,14 @@ spring:
     protocol: smtp
     test-connection: false
     send-from: doanhai8080@gmail.com
+  file-path:
+    report: file/report/
 logging:
   config: "classpath:log4j2-spring.xml"
 storage-service:
   bucket-name: smartshoes
   img-storage-name: img
-  files-storage-name: files
+  files-storage-name: file
   base-url: https://${storage-service.bucket-name}.s3-${cloud.aws.region.static}.amazonaws.com
 auth:
   token:

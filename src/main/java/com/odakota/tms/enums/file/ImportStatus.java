@@ -13,7 +13,7 @@ public enum ImportStatus {
     ERROR(2);
 
     @Getter
-    private Integer value;
+    private final Integer value;
 
     ImportStatus(Integer value) {
         this.value = value;

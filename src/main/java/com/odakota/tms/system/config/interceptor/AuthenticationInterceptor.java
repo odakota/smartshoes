@@ -16,7 +16,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.ThreadContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.method.HandlerMethod;
@@ -85,11 +84,11 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
         throw new UnAuthorizedException(MessageCode.MSG_CODE_NOT_USE, HttpStatus.FORBIDDEN);
     }
 
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,
-                                @Nullable Exception ex) {
-        logResponse(response);
-    }
+//    @Override
+//    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,
+//                                @Nullable Exception ex) {
+//        logResponse(response);
+//    }
 
     private boolean validatePrivateApi(Method method, String token) throws UnAuthorizedException {
 

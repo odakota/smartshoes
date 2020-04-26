@@ -20,6 +20,7 @@ import com.odakota.tms.enums.notify.Priority;
 import com.odakota.tms.enums.notify.SendStatus;
 import com.odakota.tms.system.base.BaseParameter.FindCondition;
 import com.odakota.tms.system.base.BaseService;
+import com.odakota.tms.system.config.UserSession;
 import com.odakota.tms.system.config.exception.CustomException;
 import com.odakota.tms.system.service.websocket.WebSocket;
 import com.odakota.tms.utils.Utils;
@@ -53,6 +54,8 @@ public class UserService extends BaseService<User, UserResource, UserCondition> 
 
     private final NotificationUserRepository notificationUserRepository;
 
+    private final UserSession userSession;
+
     private final WebSocket webSocket;
 
     @Autowired
@@ -62,7 +65,7 @@ public class UserService extends BaseService<User, UserResource, UserCondition> 
                        UserRoleRepository userRoleRepository,
                        NotificationRepository notificationRepository,
                        NotificationUserRepository notificationUserRepository,
-                       WebSocket webSocket) {
+                       UserSession userSession, WebSocket webSocket) {
         super(userRepository);
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -70,6 +73,7 @@ public class UserService extends BaseService<User, UserResource, UserCondition> 
         this.userRoleRepository = userRoleRepository;
         this.notificationRepository = notificationRepository;
         this.notificationUserRepository = notificationUserRepository;
+        this.userSession = userSession;
         this.webSocket = webSocket;
     }
 
@@ -106,6 +110,7 @@ public class UserService extends BaseService<User, UserResource, UserCondition> 
         if (resource.getAvatar() == null) {
             resource.setAvatar(Constant.EMP_IMAGE_PATH_DEFAULT);
         }
+        resource.setBranchId(userSession.getBranchId());
         // save user
         User entity = this.convertToEntity(resource.getId(), resource);
         userRepository.save(entity);

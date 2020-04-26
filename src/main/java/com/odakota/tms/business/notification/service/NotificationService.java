@@ -59,11 +59,11 @@ public class NotificationService extends BaseService<Notification, NotificationR
         // get notification system
         condition.setType(MsgType.SYSTEM);
         Page<Notification> notify = notificationRepository.findByCondition(condition, pageRequest);
-        map.put("notify", new BaseResponse<>(this.getResources(notify.getContent()), notify));
+        map.put("notify", new BaseResponse<>(this.convertToResource(notify.getContent()), notify));
         // get message
         condition.setType(MsgType.NOTIFICATION_BULLETIN);
         Page<Notification> msg = notificationRepository.findByCondition(condition, pageRequest);
-        map.put("msg", new BaseResponse<>(this.getResources(msg.getContent()), msg));
+        map.put("msg", new BaseResponse<>(this.convertToResource(msg.getContent()), msg));
         return map;
     }
 

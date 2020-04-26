@@ -44,10 +44,10 @@ public abstract class BaseService<E extends BaseEntity, R extends BaseResource<E
         C condition = this.getCondition(baseReq.getFindCondition());
         Pageable pageRequest = BaseParameter.getPageable(baseReq.getSort(), baseReq.getPage(), baseReq.getLimit());
         if (pageRequest == null) {
-            return new BaseResponse<>(this.getResources(repository.findByCondition(condition)));
+            return new BaseResponse<>(this.convertToResource(repository.findByCondition(condition)));
         }
         Page<E> page = repository.findByCondition(condition, pageRequest);
-        return new BaseResponse<>(this.getResources(page.getContent()), page);
+        return new BaseResponse<>(this.convertToResource(page.getContent()), page);
     }
 
     /**
@@ -137,7 +137,7 @@ public abstract class BaseService<E extends BaseEntity, R extends BaseResource<E
      * @param list list entity
      * @return list resource
      */
-    protected List<R> getResources(List<E> list) {
+    protected List<R> convertToResource(List<E> list) {
         return list.stream().map(this::convertToResource).collect(Collectors.toList());
     }
 

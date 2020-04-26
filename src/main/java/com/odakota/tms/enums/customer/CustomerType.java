@@ -14,7 +14,7 @@ public enum CustomerType {
     CORPORATE(2);
 
     @Getter
-    private Integer value;
+    private final Integer value;
 
     CustomerType(Integer value) {
         this.value = value;

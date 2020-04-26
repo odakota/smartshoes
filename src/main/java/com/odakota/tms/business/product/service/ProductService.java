@@ -8,12 +8,15 @@ import com.odakota.tms.business.product.resource.ColorResource;
 import com.odakota.tms.business.product.resource.ProductResource;
 import com.odakota.tms.business.product.resource.ProductResource.ProductCondition;
 import com.odakota.tms.business.product.resource.SizeResource;
+import com.odakota.tms.business.sales.repository.CampaignRepository;
+import com.odakota.tms.enums.sale.DiscountType;
 import com.odakota.tms.system.base.BaseParameter.FindCondition;
 import com.odakota.tms.system.base.BaseResponse;
 import com.odakota.tms.system.base.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -29,14 +32,33 @@ public class ProductService extends BaseService<Product, ProductResource, Produc
 
     private final SizeRepository sizeRepository;
 
+    private final CampaignRepository campaignRepository;
+
     @Autowired
     public ProductService(ProductRepository productRepository,
                           ColorRepository colorRepository,
-                          SizeRepository sizeRepository) {
+                          SizeRepository sizeRepository,
+                          CampaignRepository campaignRepository) {
         super(productRepository);
         this.productRepository = productRepository;
         this.colorRepository = colorRepository;
         this.sizeRepository = sizeRepository;
+        this.campaignRepository = campaignRepository;
+    }
+
+    public Object getProducts(Long categoryId, String productName) {
+        List<Product> products = productRepository.findAllProductSale(categoryId, productName);
+        List<ProductResource> productResources = super.convertToResource(products);
+        productResources.forEach(tmp -> campaignRepository.findByItem(tmp.getId())
+                                                          .ifPresent(var -> {
+            if (var.getDiscountType().equals(DiscountType.AMOUNT)) {
+                tmp.setPrice(tmp.getPrice() - var.getDiscountValue());
+            }
+            if (var.getDiscountType().equals(DiscountType.PERCENTAGE)) {
+                tmp.setPrice(tmp.getPrice() - tmp.getPrice() * (var.getDiscountValue()));
+            }
+        }));
+        return productResources;
     }
 
     /**

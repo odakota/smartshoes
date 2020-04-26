@@ -86,6 +86,8 @@ values (null, 1, 'Men''s loafers MK985', 'P0001', 1200, 1150, '2020-01-01 00:00:
        (null, 1, 'Men''s loafers MK983', 'P0002', 1200, 1150, '2020-01-01 00:00:00', null, null, false, 1, 1,
         '2020-01-01 00:00:00', '2020-01-01 00:00:00', false, 'img/product/prod-default.jpg'),
        (null, 1, 'Men''s loafers MK984', 'P0003', 1200, 1150, '2020-01-01 00:00:00', null, null, false, 1, 1,
+        '2020-01-01 00:00:00', '2020-01-01 00:00:00', false, 'img/product/prod-default.jpg'),
+       (null, 1, 'Men''s loafers MK986', 'P0004', 1200, 1150, '2020-10-01 00:00:00', null, null, false, 1, 1,
         '2020-01-01 00:00:00', '2020-01-01 00:00:00', false, 'img/product/prod-default.jpg');
 
 
@@ -144,7 +146,9 @@ values (1, 'P0001', 1, 300,
 --
 insert into payment_tbl (name, fee, lower_limit, upper_limit, updated_by, created_by, updated_date,
                          created_date, deleted_flag)
-values ('Cash', 0, 0, 9999999, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false);
+values ('Cash', 0, 0, 9999999, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
+       ('Credit', 0, 0, 9999999, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
+       ('MoMo', 0, 0, 9999999, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false);
 
 --
 -- Insert data to table `permission_tbl`
@@ -165,7 +169,7 @@ values (1, 'Home', null, '/dashboard/analysis', 'dashboard/Analysis', null, null
         true, false, null, false, null, false, null, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
        (6, 'Campaigns', null, '/campaigns', 'campaign/CampaignList', null, null, 0, null, null, 6.00, false, 'gift',
         true, false, null, false, null, false, null, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
-       (7, 'Reports', null, '/reports', 'report/ReportSetting', null, null, 0, null, null, 7.00, false, 'file',
+       (7, 'Reports', null, '/reports', 'layouts/RouteView', null, null, 0, null, null, 7.00, false, 'file',
         true, false, null, false, null, false, null, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
        (8, 'Profile', null, '/profile', 'layouts/RouteView', null, null, 0, null, null, 8.00, false, 'profile',
         true, false, null, false, null, false, null, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
@@ -298,6 +302,11 @@ values (1, 'Home', null, '/dashboard/analysis', 'dashboard/Analysis', null, null
        (5203, 'Read payment', 52, null, null, null, null, 2, 'payment:read', '1', 4.00, false, null, false, true,
         null, false, null, false, true, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
        (53, 'Order', 5, '/sale/order', 'sale/Order', null, null, 1, null, '1', 1.00, false, 'file-text', true, false,
+        false, false, null, false, null, false, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
+       (71, 'Setting', 7, '/reports/setting', 'report/ReportSetting', null, null, 1, null, '1', 1.00, false, 'file',
+        true, false,
+        false, false, null, false, null, false, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
+       (72, 'Report', 7, '/reports/result', 'report/Report', null, null, 1, null, '1', 1.00, false, 'file', true, false,
         false, false, null, false, null, false, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false);
 
 --
@@ -315,7 +324,9 @@ select r.id,
        p.perms
 from role_tbl r
          cross join permission_tbl p
-where p.deleted_flag = false and r.id = 1;
+where p.deleted_flag = false
+  and r.id = 1
+  and p.id != 51;
 insert into permission_role_tbl (role_id, permission_id, updated_by, created_by, updated_date, created_date,
                                  deleted_flag, api_id)
 select r.id,
@@ -328,7 +339,9 @@ select r.id,
        p.perms
 from role_tbl r
          cross join permission_tbl p
-where p.deleted_flag = false and r.id = 3 and p.id not in (22, 2020, 2021, 2022, 2023, 2024, 2025);
+where p.deleted_flag = false
+  and r.id = 3
+  and p.id not in (22, 2020, 2021, 2022, 2023, 2024, 2025);
 insert into permission_role_tbl (role_id, permission_id, updated_by, created_by, updated_date, created_date,
                                  deleted_flag, api_id)
 select r.id,
@@ -341,7 +354,9 @@ select r.id,
        p.perms
 from role_tbl r
          cross join permission_tbl p
-where p.deleted_flag = false and r.id = 2 and p.id in (1, 8);
+where p.deleted_flag = false
+  and r.id = 2
+  and p.id in (1, 8);
 
 --
 -- Insert data to table `user_role_tbl`
@@ -351,6 +366,14 @@ values (1, 1, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
        (2, 1, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
        (2, 2, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
        (3, 2, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false);
+
+insert into public.report_setting_tbl (branch_id, report_type, daily_time, monthly_time, monthly_day, yearly_time,
+                                       yearly_day, yearly_month, receiver, process_status, updated_by, created_by,
+                                       updated_date, created_date, deleted_flag)
+values (1, 1, '00:01', null, null, null, null, null, '1', 2, 2, 2, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
+       (1, 2, '00:01', '01:01', 1, '00:01', 1, 1, '1', 2, 2, 2, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
+       (1, 3, null, '00:01', 1, '00:01', 1, 1, '1', 2, 2, 2, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
+       (1, 4, null, '00:01', 1, '00:01', 1, 1, '1', 2, 2, 2, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false);
 
 --
 -- Insert data to table province_tbl
