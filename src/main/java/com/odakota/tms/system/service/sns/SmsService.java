@@ -3,6 +3,7 @@ package com.odakota.tms.system.service.sns;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.model.MessageAttributeValue;
 import com.amazonaws.services.sns.model.PublishRequest;
+import com.amazonaws.services.sns.model.PublishResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +32,8 @@ public class SmsService {
         smsAttributes.put("AWS.SNS.SMS.SMSType", new MessageAttributeValue()
                 .withStringValue("Promotional") //Sets the type to promotional.
                 .withDataType("String"));
-        amazonSNS.publish(new PublishRequest().withMessage(message).withPhoneNumber(phoneNumber)
-                                              .withMessageAttributes(smsAttributes));
+        PublishResult result =amazonSNS.publish(new PublishRequest().withMessage(message).withPhoneNumber(phoneNumber)
+                                                                    .withMessageAttributes(smsAttributes));
+        System.out.println(result);
     }
 }

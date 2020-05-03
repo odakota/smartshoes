@@ -68,6 +68,7 @@ public class MessageCode {
     public static final String MSG_CAMPAIGN_EXISTED = "campaign.existed";
     public static final String MSG_NOTIFY_NOT_EXISTED = "notify.not.existed";
     public static final String MSG_PRODUCT_OUT_OF = "product.out.of";
+    public static final String MSG_PRODUCT_CODE_EXISTED = "product.code.existed";
 
     private MessageCode() {
     }

@@ -48,5 +48,7 @@ public class RoleResource extends BaseResource<Role> {
     public static class RoleCondition extends BaseCondition {
 
         private String roleName;
+
+        private Long branchId;
     }
 }

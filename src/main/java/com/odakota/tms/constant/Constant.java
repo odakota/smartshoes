@@ -12,9 +12,6 @@ public class Constant {
     public static final int BRANCH_ID_DEFAULT = 1;
     public static final int NUMBER_OF_ROLE_DEFAULT = 2;
     public static final int NUMBER_OF_ACCOUNT_DEFAULT = 2;
-    public static final String EMP_IMAGE_PATH_DEFAULT = "img/avatar/emp-default.jpg";
-    public static final String CUS_IMAGE_PATH_DEFAULT = "img/avatar/cus-default.jpg";
-    public static final String PROD_IMAGE_PATH_DEFAULT = "img/product/prod-default.jpg";
     public static final int MENU_TYPE_SUB_MENU = 1;
     public static final int MENU_TYPE_MENU = 0;
     public static final int MENU_TYPE_BUTTON = 2;

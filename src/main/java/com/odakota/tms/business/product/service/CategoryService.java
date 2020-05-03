@@ -2,6 +2,8 @@ package com.odakota.tms.business.product.service;
 
 import com.odakota.tms.business.product.entity.Category;
 import com.odakota.tms.business.product.repository.CategoryRepository;
+import com.odakota.tms.business.product.repository.ColorRepository;
+import com.odakota.tms.business.product.repository.SizeRepository;
 import com.odakota.tms.business.product.resource.CategoryResource;
 import com.odakota.tms.business.product.resource.CategoryResource.CategoryCondition;
 import com.odakota.tms.system.base.BaseParameter.FindCondition;
@@ -18,10 +20,18 @@ public class CategoryService extends BaseService<Category, CategoryResource, Cat
 
     private final CategoryRepository categoryRepository;
 
+    private final SizeRepository sizeRepository;
+
+    private final ColorRepository colorRepository;
+
     @Autowired
-    public CategoryService(CategoryRepository categoryRepository) {
+    public CategoryService(CategoryRepository categoryRepository,
+                           SizeRepository sizeRepository,
+                           ColorRepository colorRepository) {
         super(categoryRepository);
         this.categoryRepository = categoryRepository;
+        this.sizeRepository = sizeRepository;
+        this.colorRepository = colorRepository;
     }
 
     /**
@@ -58,5 +68,13 @@ public class CategoryService extends BaseService<Category, CategoryResource, Cat
     @Override
     protected CategoryCondition getCondition(FindCondition condition) {
         return new CategoryCondition();
+    }
+
+    public Object getColors(){
+        return colorRepository.findAll();
+    }
+
+    public Object getSizes() {
+        return sizeRepository.findAll();
     }
 }

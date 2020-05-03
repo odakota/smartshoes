@@ -18,9 +18,6 @@ public class Product extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 
-    @Column(name = "branch_id")
-    private Long branchId;
-
     @Column(name = "category_id")
     private Long categoryId;
 
@@ -37,11 +34,11 @@ public class Product extends BaseEntity {
     private Long companySalesPrice;
 
     @Column(name = "sale_start_at")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date saleStartAt;
 
     @Column(name = "sale_end_at")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date saleEndAt;
 
     @Column(name = "description")

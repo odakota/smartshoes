@@ -23,6 +23,8 @@ public class FieldConstant {
     // RECEIPT FIELD NAME
     public static final String RECEIPT_CODE = "code";
     public static final String RECEIPT_BILL_NAME = "billCode";
+    // RECEIPT FIELD NAME
+    public static final String PRODUCT_CODE = "code";
     // ACCOUNT FIELD NAME
     public static final String ACCOUNT_USER_NAME = "userName";
     public static final String ACCOUNT_PASS = "password";

@@ -39,4 +39,7 @@ public interface UserRepository extends BaseRepository<User, UserCondition> {
                    "and date_part('day', u.birth_date) = date_part('day', CURRENT_DATE)" +
                    "and date_part('month', u.birth_date) = date_part('month', CURRENT_DATE) ", nativeQuery = true)
     List<User> findByBirthDayToDay();
+
+    @Query("select u.id from User u where u.deletedFlag = false")
+    List<Long> findAllUserId();
 }

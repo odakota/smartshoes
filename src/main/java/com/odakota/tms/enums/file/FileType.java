@@ -10,7 +10,8 @@ import java.util.Arrays;
  */
 public enum FileType {
 
-    AVATAR(1);
+    AVATAR(1),
+    PRODUCT(2);
 
     @Getter
     private final Integer value;

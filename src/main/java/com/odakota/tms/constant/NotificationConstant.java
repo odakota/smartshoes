@@ -18,4 +18,8 @@ public class NotificationConstant {
 
     public static final String CONTENT_HAPPY_BIRTHDAY = "Happy Birthday! We wish you every success, remember to keep your " +
                                                         "future efforts no matter what you pursue. Thanks for sticking with us.";
+
+    public static final String TITLE_NEW_PRODUCT = "New product";
+
+    public static final String CONTENT_NEW_PRODUCT = "New %s will start selling from %s";
 }

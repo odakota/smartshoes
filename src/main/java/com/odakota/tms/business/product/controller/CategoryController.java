@@ -8,6 +8,7 @@ import com.odakota.tms.enums.auth.ApiId;
 import com.odakota.tms.system.annotations.RequiredAuthentication;
 import com.odakota.tms.system.base.BaseController;
 import com.odakota.tms.system.base.BaseParameter;
+import com.odakota.tms.system.config.data.ResponseData;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -95,5 +96,18 @@ public class CategoryController extends BaseController<Category, CategoryResourc
     @DeleteMapping(value = "/categories/{id}", produces = ApiVersion.API_VERSION_1)
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
         return super.deleteResource(id);
+    }
+
+
+    @RequiredAuthentication//(value = ApiId.R_CATEGORY)
+    @GetMapping(value = "/color", produces = ApiVersion.API_VERSION_1)
+    public ResponseEntity<?> getColors() {
+        return ResponseEntity.ok(new ResponseData<>().success(categoryService.getColors()));
+    }
+
+    @RequiredAuthentication//(value = ApiId.R_CATEGORY)
+    @GetMapping(value = "/size", produces = ApiVersion.API_VERSION_1)
+    public ResponseEntity<?> getSizes() {
+        return ResponseEntity.ok(new ResponseData<>().success(categoryService.getSizes()));
     }
 }

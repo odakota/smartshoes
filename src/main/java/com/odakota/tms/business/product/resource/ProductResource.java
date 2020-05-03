@@ -21,8 +21,6 @@ import java.util.Date;
 @AllArgsConstructor
 public class ProductResource extends BaseResource<Product> {
 
-    private Long branchId;
-
     private Long categoryId;
 
     private String name;
@@ -33,12 +31,12 @@ public class ProductResource extends BaseResource<Product> {
 
     private Long lstPrice;
 
-    private Long companySalesPrice;
+    private Long companySalesPrice = 0L;
 
-    @JsonFormat(pattern = Constant.YYYY_MM_DD_HH_MM_SS, timezone = "GMT+7")
+    @JsonFormat(pattern = Constant.YYYY_MM_DD)
     private Date saleStartAt;
 
-    @JsonFormat(pattern = Constant.YYYY_MM_DD_HH_MM_SS, timezone = "GMT+7")
+    @JsonFormat(pattern = Constant.YYYY_MM_DD)
     private Date saleEndAt;
 
     private String description;
@@ -46,6 +44,13 @@ public class ProductResource extends BaseResource<Product> {
     private boolean isCompanySales;
 
     private String path;
+
+    private Long total;
+
+    public ProductResource(Long id, Long total) {
+        super(id);
+        this.total = total;
+    }
 
     /**
      * @author haidv
@@ -57,5 +62,11 @@ public class ProductResource extends BaseResource<Product> {
     public static class ProductCondition extends BaseCondition {
 
         private Long categoryId;
+
+        private Long branchId;
+
+        private Date saleStartAt;
+
+        private Date saleEndAt;
     }
 }

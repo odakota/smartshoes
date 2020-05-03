@@ -11,10 +11,7 @@ import com.odakota.tms.business.notification.entity.Notification;
 import com.odakota.tms.business.notification.entity.NotificationUser;
 import com.odakota.tms.business.notification.repository.NotificationRepository;
 import com.odakota.tms.business.notification.repository.NotificationUserRepository;
-import com.odakota.tms.constant.Constant;
-import com.odakota.tms.constant.FieldConstant;
-import com.odakota.tms.constant.MessageCode;
-import com.odakota.tms.constant.NotificationConstant;
+import com.odakota.tms.constant.*;
 import com.odakota.tms.enums.notify.MsgType;
 import com.odakota.tms.enums.notify.Priority;
 import com.odakota.tms.enums.notify.SendStatus;
@@ -108,7 +105,7 @@ public class UserService extends BaseService<User, UserResource, UserCondition> 
         resource.setPassword(passwordEncoder.encode(resource.getConfirmPassword()));
         // set default avatar
         if (resource.getAvatar() == null) {
-            resource.setAvatar(Constant.EMP_IMAGE_PATH_DEFAULT);
+            resource.setAvatar(FilePath.EMP_IMAGE_PATH_DEFAULT);
         }
         resource.setBranchId(userSession.getBranchId());
         // save user

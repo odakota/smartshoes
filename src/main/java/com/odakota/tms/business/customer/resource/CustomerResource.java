@@ -1,6 +1,8 @@
 package com.odakota.tms.business.customer.resource;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.odakota.tms.business.customer.entity.Customer;
+import com.odakota.tms.constant.Constant;
 import com.odakota.tms.constant.MessageCode;
 import com.odakota.tms.system.base.BaseCondition;
 import com.odakota.tms.system.base.BaseResource;
@@ -28,6 +30,7 @@ public class CustomerResource extends BaseResource<Customer> {
 
     private Integer sex;
 
+    @JsonFormat(pattern = Constant.YYYY_MM_DD)
     private Date birthDay;
 
     private String avatar;
@@ -66,5 +69,9 @@ public class CustomerResource extends BaseResource<Customer> {
     public static class CustomerCondition extends BaseCondition {
 
         private String name;
+
+        private Integer customerSegment;
+
+        private Integer customerType;
     }
 }

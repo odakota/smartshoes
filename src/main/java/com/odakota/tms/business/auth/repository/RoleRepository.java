@@ -25,7 +25,9 @@ public interface RoleRepository extends BaseRepository<Role, RoleCondition> {
      */
     @Query("select r from Role r where r.deletedFlag = false and (:#{#condition.roleName} is null " +
            "or (r.roleName like %:#{#condition.roleName}% or r.roleCode like %:#{#condition.roleName}%))" +
-           "and (:#{@userSession.branchId} is null or r.branchId = :#{@userSession.branchId})")
+           "and ((:#{@userSession.branchId} is null and (:#{#condition.branchId} is null " +
+           "or r.branchId = :#{#condition.branchId})) " +
+           "or r.branchId = :#{@userSession.branchId})")
     Page<Role> findByCondition(@Param("condition") RoleCondition condition, Pageable pageable);
 
     long countByBranchIdAndDeletedFlagFalse(Long branchId);

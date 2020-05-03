@@ -75,6 +75,10 @@ public class UploadService {
                 filePath = (imgStorageName + FilePath.AVATAR_IMAGE)
                         .replace("{img-name}", new Date().getTime() + ".jpg");
                 break;
+            case PRODUCT:
+                filePath = (imgStorageName + FilePath.PRODUCT_IMAGE)
+                        .replace("{img-name}", new Date().getTime() + ".jpg");
+                break;
             default:
                 throw new CustomException(MessageCode.MSG_INVALID_IMAGE_TYPE, HttpStatus.BAD_REQUEST);
         }

@@ -36,8 +36,10 @@ public class BaseResponse<R extends BaseResource<?>> {
 
     public BaseResponse(List<R> data, Page page) {
         this.data = data;
-        this.pagination = new Pagination(page.getTotalPages(), page.getNumber() + 1, page.getSize(),
-                                         page.getTotalElements());
+        if (page != null) {
+            this.pagination = new Pagination(page.getTotalPages(), page.getNumber() + 1, page.getSize(),
+                                             page.getTotalElements());
+        }
     }
 
     @Getter
