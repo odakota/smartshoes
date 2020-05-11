@@ -1,5 +1,6 @@
 package com.odakota.tms.business.process.job;
 
+import com.odakota.tms.business.auth.repository.UserRepository;
 import com.odakota.tms.business.process.entity.BestsellerReport;
 import com.odakota.tms.business.process.entity.InventoryReport;
 import com.odakota.tms.business.process.repository.BestsellerReportRepository;
@@ -66,6 +67,9 @@ public class ReportJob extends QuartzJobBean {
     private BestsellerReportRepository bestsellerReportRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private S3StorageService storageService;
 
     @Autowired
@@ -126,12 +130,7 @@ public class ReportJob extends QuartzJobBean {
     }
 
     private void buildBestsellerReport(Long branchId, String reportDate, String format) {
-        List<Product> products;
-        if (branchId == null) {
-            products = productRepository.findByDeletedFlagFalse();
-        } else {
-            products = productRepository.findAllByBranch(branchId);
-        }
+        List<Product> products = productRepository.findAllByBranch();
         List<SalesOrderDetail> salesOrders = salesOrderDetailRepository
                 .findAllPreMonthByBranch(branchId, reportDate, format);
         List<BestsellerReport> bestsellerReports = new ArrayList<>();
@@ -167,7 +166,7 @@ public class ReportJob extends QuartzJobBean {
 
     private void buildInventoryReport(Long branchId) {
         List<InventoryReport> inventoryReports = new ArrayList<>();
-        List<Product> products = productRepository.findAllByBranch(branchId);
+        List<Product> products = productRepository.findAllByBranch();
         List<ReceiptDetail> receiptDetails = receiptDetailRepository.findAllByBranch(branchId, Utils
                 .calculationTime(new Date(), -1));
         List<SalesOrderDetail> salesOrders = salesOrderDetailRepository

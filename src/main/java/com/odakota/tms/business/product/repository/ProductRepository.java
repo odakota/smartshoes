@@ -30,10 +30,6 @@ public interface ProductRepository extends BaseRepository<Product, ProductCondit
 
     Optional<Product> findByCodeAndDeletedFlagFalse(String code);
 
-    @Query("select p from Product p join AllocationProduct ap on p.id = ap.productId where p.deletedFlag = false " +
-           "and ap.branchId = :#{@userSession.branchId}")
-    List<Product> findAllByBranch();
-
     @Query("select p from Product p join AllocationProduct ap on p.id = ap.productId join Category c on p.categoryId = c.id " +
            "where p.deletedFlag = false and ap.branchId = :#{@userSession.branchId} and c.id in ?1 ")
     List<Product> findAllByCategoryAndBranch(List<Long> categoryId);
@@ -45,10 +41,12 @@ public interface ProductRepository extends BaseRepository<Product, ProductCondit
     List<Product> findAllProductSale(@Param("categoryId") Long categoryId, @Param("productName") String productName);
 
     @Query("select p from Product p where p.deletedFlag = false ")
-    List<Product> findAllByBranch(Long branchId);
+    List<Product> findAllByBranch();
 
     @Query("select new com.odakota.tms.business.product.resource.ProductResource(p.id, sum (al.total)) from Product p " +
            "join AllocationProduct al on al.productId = p.id " +
            "where p.deletedFlag = false and (:branchId is null or al.branchId = :branchId) group by p.id")
     List<ProductResource> countByBranch(@Param("branchId") Long branchId);
+
+    Boolean existsByCategoryIdAndDeletedFlagFalse(Long category);
 }

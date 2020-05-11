@@ -42,4 +42,7 @@ public interface UserRepository extends BaseRepository<User, UserCondition> {
 
     @Query("select u.id from User u where u.deletedFlag = false")
     List<Long> findAllUserId();
+
+    @Query("select u from User u where u.deletedFlag = false and u.branchId = ?1")
+    List<User> findAllUserId(Long branchId);
 }

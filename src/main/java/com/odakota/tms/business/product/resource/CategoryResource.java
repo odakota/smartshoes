@@ -21,6 +21,8 @@ public class CategoryResource extends BaseResource<Category> {
 
     private String name;
 
+    private String description;
+
     /**
      * @author haidv
      * @version 1.0

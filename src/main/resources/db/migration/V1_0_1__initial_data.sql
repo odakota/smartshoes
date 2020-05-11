@@ -171,7 +171,7 @@ values (1, 'Home', null, '/dashboard/analysis', 'dashboard/Analysis', null, null
         true, false, null, false, null, false, null, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
        (7, 'Reports', null, '/reports', 'layouts/RouteView', null, null, 0, null, null, 7.00, false, 'file',
         true, false, null, false, null, false, null, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
-       (8, 'Profile', null, '/profile', 'layouts/RouteView', null, null, 0, null, null, 8.00, false, 'profile',
+       (8, 'Profile', null, '/profile', 'profile/Profile', null, null, 0, null, null, 8.00, false, 'profile',
         true, false, null, false, null, false, null, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),
        (20, 'Role', 2, '/system/role', 'system/RoleList', null, null, 1, null, null, 3.00, false, 'security-scan', true,
         false, null, false, null, false, null, null, 1, 1, '2020-01-01 00:00:00', '2020-01-01 00:00:00', false),

@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author haidv
  * @version 1.0
@@ -23,4 +25,7 @@ public interface SalesOrderRepository extends BaseRepository<SalesOrder, SalesOr
            "and ((:#{@userSession.branchId} is null and (:#{#condition.branchId} is null " +
            "or e.branchId = :#{#condition.branchId})) or e.branchId = :#{@userSession.branchId}) ")
     Page<SalesOrder> findByCondition(SalesOrderCondition condition, Pageable pageable);
+
+    @Query("select e from SalesOrder e where e.deletedFlag = false ")
+    List<SalesOrder> findByBranch(Long branchId, String format, String month);
 }

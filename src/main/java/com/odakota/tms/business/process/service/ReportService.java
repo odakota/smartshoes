@@ -38,18 +38,18 @@ public class ReportService {
 
     public Object getReport(ReportType reportType, String reportDate) {
 
+        Long branchId = userSession.getBranchId();
         switch (reportType) {
             case INVENTORY:
-                return inventoryReportRepository.findByBranchId(userSession.getBranchId(),
+                return inventoryReportRepository.findByBranchId(branchId,
                                                                 Utils.convertToDate(reportDate, Constant.YYYY_MM_DD));
             case BESTSELLERS_OF_MONTH:
                 return bestsellerReportRepository
-                        .findByBranchIdAndReportDateOrderByOrderNumberAsc(userSession.getBranchId(),
-                                                                           reportDate.substring(0, 7));
+                        .findByBranchIdAndReportDateOrderByOrderNumberAsc(branchId,
+                                                                          reportDate.substring(0, 7));
             case BESTSELLERS_OF_YEAR:
                 return bestsellerReportRepository
-                        .findByBranchIdAndReportDateOrderByOrderNumberAsc(userSession.getBranchId(), reportDate);
-            case REVENUE_BY_STAFF:
+                        .findByBranchIdAndReportDateOrderByOrderNumberAsc(branchId, reportDate);
             default:
                 throw new CustomException(MessageCode.MSG_RESOURCE_NOT_EXIST, HttpStatus.BAD_REQUEST);
         }
@@ -59,7 +59,8 @@ public class ReportService {
 
         return bestsellerReportRepository
                 .findByBranchIdAndReportDateOrderByOrderNumberAsc(userSession.getBranchId(),
-                                                                  Utils.convertToStringFormat(Utils.calculationTimeMonth(new Date(), -1),
-                                                                                              Constant.YYYY_MM_DD).substring(0, 7));
+                                                                  Utils.convertToStringFormat(
+                                                                          Utils.calculationTimeMonth(new Date(), -1),
+                                                                          Constant.YYYY_MM_DD).substring(0, 7));
     }
 }

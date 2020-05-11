@@ -3,12 +3,16 @@ package com.odakota.tms.business.product.service;
 import com.odakota.tms.business.product.entity.Category;
 import com.odakota.tms.business.product.repository.CategoryRepository;
 import com.odakota.tms.business.product.repository.ColorRepository;
+import com.odakota.tms.business.product.repository.ProductRepository;
 import com.odakota.tms.business.product.repository.SizeRepository;
 import com.odakota.tms.business.product.resource.CategoryResource;
 import com.odakota.tms.business.product.resource.CategoryResource.CategoryCondition;
+import com.odakota.tms.constant.MessageCode;
 import com.odakota.tms.system.base.BaseParameter.FindCondition;
 import com.odakota.tms.system.base.BaseService;
+import com.odakota.tms.system.config.exception.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 /**
@@ -24,14 +28,31 @@ public class CategoryService extends BaseService<Category, CategoryResource, Cat
 
     private final ColorRepository colorRepository;
 
+    private final ProductRepository productRepository;
+
     @Autowired
     public CategoryService(CategoryRepository categoryRepository,
                            SizeRepository sizeRepository,
-                           ColorRepository colorRepository) {
+                           ColorRepository colorRepository,
+                           ProductRepository productRepository) {
         super(categoryRepository);
         this.categoryRepository = categoryRepository;
         this.sizeRepository = sizeRepository;
         this.colorRepository = colorRepository;
+        this.productRepository = productRepository;
+    }
+
+    /**
+     * Specify a resource identifier and delete the resource.
+     *
+     * @param id Resource identifier
+     */
+    @Override
+    public void deleteResource(Long id) {
+        if (productRepository.existsByCategoryIdAndDeletedFlagFalse(id)){
+            throw new CustomException(MessageCode.MSG_CATEGORY_NOT_DELETED, HttpStatus.CONFLICT);
+        }
+        super.deleteResource(id);
     }
 
     /**

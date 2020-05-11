@@ -64,11 +64,11 @@
             <artifactId>spring-boot-starter-log4j2</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
-            <version>5.2.4</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.flywaydb</groupId>-->
+<!--            <artifactId>flyway-core</artifactId>-->
+<!--            <version>5.2.4</version>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -196,36 +196,36 @@
         </plugins>
     </build>
 
-    <profiles>
-        <profile>
-            <id>prod</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.flywaydb</groupId>
-                        <artifactId>flyway-maven-plugin</artifactId>
-                        <version>5.2.4</version>
-                        <configuration>
-                            <driver>org.postgresql.Driver</driver>
-                            <url>${DB_URL}</url>
-                            <user>${DB_USERNAME}</user>
-                            <password>${DB_PASSWORD}</password>
-                            <sqlMigrationSeparator>__</sqlMigrationSeparator>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>migrate</id>
-                                <phase>initialize</phase>
-                                <goals>
-                                    <goal>info</goal>
-                                    <goal>migrate</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
+<!--    <profiles>-->
+<!--        <profile>-->
+<!--            <id>prod</id>-->
+<!--            <build>-->
+<!--                <plugins>-->
+<!--                    <plugin>-->
+<!--                        <groupId>org.flywaydb</groupId>-->
+<!--                        <artifactId>flyway-maven-plugin</artifactId>-->
+<!--                        <version>5.2.4</version>-->
+<!--                        <configuration>-->
+<!--                            <driver>org.postgresql.Driver</driver>-->
+<!--                            <url>${DB_URL}</url>-->
+<!--                            <user>${DB_USERNAME}</user>-->
+<!--                            <password>${DB_PASSWORD}</password>-->
+<!--                            <sqlMigrationSeparator>__</sqlMigrationSeparator>-->
+<!--                        </configuration>-->
+<!--                        <executions>-->
+<!--                            <execution>-->
+<!--                                <id>migrate</id>-->
+<!--                                <phase>initialize</phase>-->
+<!--                                <goals>-->
+<!--                                    <goal>info</goal>-->
+<!--                                    <goal>migrate</goal>-->
+<!--                                </goals>-->
+<!--                            </execution>-->
+<!--                        </executions>-->
+<!--                    </plugin>-->
+<!--                </plugins>-->
+<!--            </build>-->
+<!--        </profile>-->
+<!--    </profiles>-->
 
 </project>
