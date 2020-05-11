@@ -473,6 +473,7 @@ create table category_tbl (
     id           bigint primary key generated always as identity,
     parent_id    bigint,
     name         varchar(128) not null,
+    description  varchar(2000),
     updated_by   bigint,
     created_by   bigint,
     updated_date timestamp,

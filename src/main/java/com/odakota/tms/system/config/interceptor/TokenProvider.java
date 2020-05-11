@@ -1,12 +1,17 @@
 package com.odakota.tms.system.config.interceptor;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTCreator;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.auth0.jwt.interfaces.JWTVerifier;
 import com.odakota.tms.constant.Constant;
 import com.odakota.tms.constant.MessageCode;
 import com.odakota.tms.enums.auth.Client;
 import com.odakota.tms.enums.auth.TokenType;
 import com.odakota.tms.system.config.UserSession;
 import com.odakota.tms.system.config.exception.UnAuthorizedException;
-import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,7 +33,9 @@ import java.util.stream.Collectors;
 public class TokenProvider {
 
     private static final String SIGNING_KEY = "tms-app-signing-key";
+
     private static final String SUBJECT = "tms-authentication";
+
     private static final String ISSUER = "odakota";
 
     private final UserSession userSession;
@@ -51,23 +58,21 @@ public class TokenProvider {
     }
 
     public String generateToken(TokenType tokenType, Client client, String tokenId, Map<String, Object> data) {
-        Claims claims = Jwts.claims();
-        claims.setId(tokenId);
-        claims.setSubject(SUBJECT);
-        claims.setIssuer(ISSUER);
-        claims.setExpiration(new Date(generateTimeExpiration(tokenType, client)));
-        claims.put(Client.class.getSimpleName(), client);
-        claims.put(TokenType.class.getSimpleName(), tokenType);
+        JWTCreator.Builder b = JWT.create().withSubject(SUBJECT).withIssuer(ISSUER)
+                                  .withExpiresAt(new Date(generateTimeExpiration(tokenType, client)))
+                                  .withJWTId(tokenId);
         if (tokenType.equals(TokenType.ACCESS)) {
             if (client.equals(Client.ADMIN)) {
-                claims.put(Constant.TOKEN_CLAIM_USER_ID, data.get(Constant.TOKEN_CLAIM_USER_ID));
-                claims.put(Constant.TOKEN_CLAIM_ROLE_ID, data.get(Constant.TOKEN_CLAIM_ROLE_ID));
-                claims.put(Constant.TOKEN_CLAIM_BRANCH_ID, data.get(Constant.TOKEN_CLAIM_BRANCH_ID));
+                b.withClaim(Constant.TOKEN_CLAIM_USER_ID, (Long) data.get(Constant.TOKEN_CLAIM_USER_ID));
+                b.withClaim(Constant.TOKEN_CLAIM_ROLE_ID, data.get(Constant.TOKEN_CLAIM_ROLE_ID).toString());
+                if (data.get(Constant.TOKEN_CLAIM_BRANCH_ID) != null) {
+                    b.withClaim(Constant.TOKEN_CLAIM_BRANCH_ID, (Long) data.get(Constant.TOKEN_CLAIM_BRANCH_ID));
+                }
             } else {
-                claims.put(Constant.TOKEN_CLAIM_CUSTOMER_ID, data.get(Constant.TOKEN_CLAIM_USER_ID));
+                b.withClaim(Constant.TOKEN_CLAIM_CUSTOMER_ID, (Long) data.get(Constant.TOKEN_CLAIM_USER_ID));
             }
         }
-        return Jwts.builder().signWith(SignatureAlgorithm.HS256, SIGNING_KEY).setClaims(claims).compact();
+        return b.sign(Algorithm.HMAC256(SIGNING_KEY.getBytes()));
     }
 
     public long generateTimeExpiration(TokenType tokenType, Client client) {
@@ -90,15 +95,16 @@ public class TokenProvider {
 
     void parseTokenInfoToUserSession(String token) throws UnAuthorizedException {
         try {
-            Claims claims = Jwts.parser().setSigningKey(SIGNING_KEY).parseClaimsJws(token).getBody();
-            userSession.setUserId(claims.get(Constant.TOKEN_CLAIM_USER_ID, Long.class));
-            userSession.setRoleIds(Arrays.stream(claims.get(Constant.TOKEN_CLAIM_ROLE_ID, String.class).split(",")).map(
+            JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(SIGNING_KEY.getBytes())).build();
+            DecodedJWT jwt = jwtVerifier.verify(token);
+            userSession.setUserId(jwt.getClaim(Constant.TOKEN_CLAIM_USER_ID).asLong());
+            userSession.setRoleIds(Arrays.stream(jwt.getClaim(Constant.TOKEN_CLAIM_ROLE_ID).asString().split(",")).map(
                     Long::parseLong).collect(Collectors.toList()));
-            userSession.setTokenId(claims.getId());
-            userSession.setBranchId(claims.get(Constant.TOKEN_CLAIM_BRANCH_ID, Long.class));
-        } catch (MalformedJwtException | UnsupportedJwtException | IllegalArgumentException | SignatureException ex) {
+            userSession.setTokenId(jwt.getId());
+            userSession.setBranchId(jwt.getClaim(Constant.TOKEN_CLAIM_BRANCH_ID).asLong());
+        } catch (JWTDecodeException ex) {
             throw new UnAuthorizedException(MessageCode.MSG_TOKEN_INVALID, HttpStatus.UNAUTHORIZED);
-        } catch (ExpiredJwtException ex) {
+        } catch (Exception ex) {
             throw new UnAuthorizedException(MessageCode.MSG_TOKEN_EXPIRED, HttpStatus.UNAUTHORIZED);
         }
     }
